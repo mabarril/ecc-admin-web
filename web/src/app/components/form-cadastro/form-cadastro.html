@@ -23,7 +23,7 @@
                 <mat-stepper linear #stepper>
                     
                     <!-- Passo 1: Dados do Esposo -->
-                    <mat-step [stepControl]="pessoasFormArray.at(0)" label="Esposo">
+                    <mat-step [stepControl]="esposoFormGroup" label="Esposo">
                         <div formArrayName="pessoas">
                             <div [formGroupName]="0" class="pessoa-form">
                                 <h2>Dados do Esposo</h2>
@@ -32,7 +32,7 @@
                                     <mat-form-field appearance="outline" class="form-field full-width">
                                         <mat-label>Nome Completo</mat-label>
                                         <input matInput formControlName="nome_completo">
-                                        <mat-error *ngIf="pessoasFormArray.at(0).get('nome_completo')?.hasError('required')">
+                                        <mat-error *ngIf="esposoFormGroup.get('nome_completo')?.hasError('required')">
                                             Nome completo é obrigatório
                                         </mat-error>
                                     </mat-form-field>
@@ -60,7 +60,7 @@
                                     <mat-form-field appearance="outline" class="form-field">
                                         <mat-label>Email</mat-label>
                                         <input matInput formControlName="email" type="email">
-                                        <mat-error *ngIf="pessoasFormArray.at(0).get('email')?.hasError('email')">
+                                        <mat-error *ngIf="esposoFormGroup.get('email')?.hasError('email')">
                                             Email inválido
                                         </mat-error>
                                     </mat-form-field>
@@ -98,7 +98,7 @@
                                                 {{ religiao }}
                                             </mat-option>
                                         </mat-select>
-                                        <mat-error *ngIf="pessoasFormArray.at(0).get('religiao')?.hasError('required')">
+                                        <mat-error *ngIf="esposoFormGroup.get('religiao')?.hasError('required')">
                                             Religião é obrigatória
                                         </mat-error>
                                     </mat-form-field>
@@ -117,7 +117,7 @@
                                     <mat-checkbox formControlName="problema_saude">Possui problema de saúde?</mat-checkbox>
                                 </div>
 
-                                <div class="form-row" *ngIf="pessoasFormArray.at(0).get('problema_saude')?.value">
+                                <div class="form-row" *ngIf="esposoFormGroup.get('problema_saude')?.value">
                                     <mat-form-field appearance="outline" class="form-field full-width">
                                         <mat-label>Descreva o problema de saúde</mat-label>
                                         <textarea matInput formControlName="problema_saude_descricao" rows="2"></textarea>
@@ -128,7 +128,7 @@
                                     <mat-checkbox formControlName="medicamento_especial">Usa medicamento especial?</mat-checkbox>
                                 </div>
 
-                                <div class="form-row" *ngIf="pessoasFormArray.at(0).get('medicamento_especial')?.value">
+                                <div class="form-row" *ngIf="esposoFormGroup.get('medicamento_especial')?.value">
                                     <mat-form-field appearance="outline" class="form-field full-width">
                                         <mat-label>Descreva o medicamento</mat-label>
                                         <textarea matInput formControlName="medicamento_especial_descricao" rows="2"></textarea>
@@ -146,7 +146,7 @@
                     </mat-step>
 
                     <!-- Passo 2: Dados da Esposa -->
-                    <mat-step [stepControl]="pessoasFormArray.at(1)" label="Esposa">
+                    <mat-step [stepControl]="esposaFormGroup" label="Esposa">
                         <div formArrayName="pessoas">
                             <div [formGroupName]="1" class="pessoa-form">
                                 <h2>Dados da Esposa</h2>
@@ -155,7 +155,7 @@
                                     <mat-form-field appearance="outline" class="form-field full-width">
                                         <mat-label>Nome Completo</mat-label>
                                         <input matInput formControlName="nome_completo">
-                                        <mat-error *ngIf="pessoasFormArray.at(1).get('nome_completo')?.hasError('required')">
+                                        <mat-error *ngIf="esposaFormGroup.get('nome_completo')?.hasError('required')">
                                             Nome completo é obrigatório
                                         </mat-error>
                                     </mat-form-field>
@@ -183,7 +183,7 @@
                                     <mat-form-field appearance="outline" class="form-field">
                                         <mat-label>Email</mat-label>
                                         <input matInput formControlName="email" type="email">
-                                        <mat-error *ngIf="pessoasFormArray.at(1).get('email')?.hasError('email')">
+                                        <mat-error *ngIf="esposaFormGroup.get('email')?.hasError('email')">
                                             Email inválido
                                         </mat-error>
                                     </mat-form-field>
@@ -221,7 +221,7 @@
                                                 {{ religiao }}
                                             </mat-option>
                                         </mat-select>
-                                        <mat-error *ngIf="pessoasFormArray.at(1).get('religiao')?.hasError('required')">
+                                        <mat-error *ngIf="esposaFormGroup.get('religiao')?.hasError('required')">
                                             Religião é obrigatória
                                         </mat-error>
                                     </mat-form-field>
@@ -240,7 +240,7 @@
                                     <mat-checkbox formControlName="problema_saude">Possui problema de saúde?</mat-checkbox>
                                 </div>
 
-                                <div class="form-row" *ngIf="pessoasFormArray.at(1).get('problema_saude')?.value">
+                                <div class="form-row" *ngIf="esposaFormGroup.get('problema_saude')?.value">
                                     <mat-form-field appearance="outline" class="form-field full-width">
                                         <mat-label>Descreva o problema de saúde</mat-label>
                                         <textarea matInput formControlName="problema_saude_descricao" rows="2"></textarea>
@@ -251,7 +251,7 @@
                                     <mat-checkbox formControlName="medicamento_especial">Usa medicamento especial?</mat-checkbox>
                                 </div>
 
-                                <div class="form-row" *ngIf="pessoasFormArray.at(1).get('medicamento_especial')?.value">
+                                <div class="form-row" *ngIf="esposaFormGroup.get('medicamento_especial')?.value">
                                     <mat-form-field appearance="outline" class="form-field full-width">
                                         <mat-label>Descreva o medicamento</mat-label>
                                         <textarea matInput formControlName="medicamento_especial_descricao" rows="2"></textarea>
@@ -270,7 +270,7 @@
                     </mat-step>
 
                     <!-- Passo 3: Dados do Casal -->
-                    <mat-step [stepControl]="inscricaoForm.get('casal')" label="Dados do Casal">
+                    <mat-step [stepControl]="casalFormGroup" label="Dados do Casal">
                         <div formGroupName="casal" class="pessoa-form">
                             <h2>Dados Conjugais</h2>
 
@@ -416,9 +416,9 @@
                             <p>Revise os principais dados do casal antes de salvar a atualização no sistema.</p>
 
                             <div style="margin-bottom: 20px; line-height: 1.6;">
-                                <strong>Esposo:</strong> {{ pessoasFormArray.at(0)?.get('nome_completo')?.value || 'Não preenchido' }}
+                                <strong>Esposo:</strong> {{ esposoFormGroup.get('nome_completo')?.value || 'Não preenchido' }}
                                 <br>
-                                <strong>Esposa:</strong> {{ pessoasFormArray.at(1)?.get('nome_completo')?.value || 'Não preenchido' }}
+                                <strong>Esposa:</strong> {{ esposaFormGroup.get('nome_completo')?.value || 'Não preenchido' }}
                                 <br>
                                 <strong>Endereço:</strong> {{ inscricaoForm.get('casal.endereco')?.value || 'Não preenchido' }}
                                 <br>

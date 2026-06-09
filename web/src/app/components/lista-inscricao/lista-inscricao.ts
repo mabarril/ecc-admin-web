@@ -94,8 +94,9 @@ export class ListaInscricao implements OnInit {
   loading = false;
   eventoSelecionado: number | null = null;
   inscricoes: Inscricao[] = [];
-  listaInscritos = new MatTableDataSource<any>([]);
+  listaInscritos: any[] = [];
   listaInscritosOriginal: any[] = [];
+  dataSource = new MatTableDataSource<any>([]);
   displayedColumns: string[] = ['id', 'nome', 'tipo_participante', 'status', 'actions'];
   fichaPdf?: FichaPdfComponent;
   private casaisMap: Map<number, any> = new Map();
@@ -198,22 +199,22 @@ export class ListaInscricao implements OnInit {
             quarto: inscricao.quarto
           };
         });
-        this.listaInscritosOriginal = [...mapped];
-        this.listaInscritos = new MatTableDataSource<any>(mapped);
-        this.listaInscritos.paginator = this.paginator;
+        this.listaInscritosOriginal = [...this.listaInscritos];
+        this.dataSource.data = this.listaInscritos;
+        this.dataSource.paginator = this.paginator;
         
-        this.listaInscritos.sortingDataAccessor = (item, property) => {
+        this.dataSource.sortingDataAccessor = (item, property) => {
           switch (property) {
             case 'nome': return item.casal?.nome?.toLowerCase() || '';
             default: return item[property];
           }
         };
         
-        this.listaInscritos.filterPredicate = (data, filter) => {
+        this.dataSource.filterPredicate = (data, filter) => {
           return data.casal?.nome?.toLowerCase().includes(filter) || false;
         };
         
-        this.listaInscritos.sort = this.sort;
+        this.dataSource.sort = this.sort;
         this.carregarListaFilhos(this.listaInscritosOriginal);
       },
       error: (error: HttpErrorResponse) => {
@@ -230,7 +231,7 @@ export class ListaInscricao implements OnInit {
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.listaInscritos.filter = filterValue.trim().toLowerCase();
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   editarCasal(casalId: number) {

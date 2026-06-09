@@ -138,6 +138,18 @@ export class FormCadastro implements OnInit {
     return this.inscricaoForm.get('filhos') as FormArray;
   }
 
+  get casalFormGroup(): FormGroup {
+    return this.inscricaoForm.get('casal') as FormGroup;
+  }
+
+  get esposoFormGroup(): FormGroup {
+    return this.pessoasFormArray.at(0) as FormGroup;
+  }
+
+  get esposaFormGroup(): FormGroup {
+    return this.pessoasFormArray.at(1) as FormGroup;
+  }
+
   adicionarFilho(): void {
     this.filhosFormArray.push(this.criarFilhoFormGroup());
   }
