@@ -14,7 +14,7 @@ mat-card-header {
 
 mat-card-title {
   font-size: 24px;
-  color: #3f51b5;
+  color: #ffffff;
 }
 
 mat-card-subtitle {
@@ -24,7 +24,7 @@ mat-card-subtitle {
 .form-section {
   margin-bottom: 30px;
   padding-bottom: 20px;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .form-row {
@@ -49,16 +49,18 @@ mat-card-subtitle {
 .pessoa-form {
   padding: 20px;
   margin-bottom: 20px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
 }
 
 .filho-form {
   padding: 16px;
   margin-bottom: 16px;
-  background-color: #f5f5f5;
-  border-radius: 8px;
-  border-left: 4px solid #3f51b5;
+  background-color: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  border-left: 4px solid #6366f1;
 }
 
 .filho-header {

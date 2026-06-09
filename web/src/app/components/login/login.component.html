@@ -1,48 +1,76 @@
-<div class="login-container">
-  <mat-card class="login-card">
-    <mat-card-header>
-      <mat-card-title>
-        <mat-icon>admin_panel_settings</mat-icon>
-        Administração ECC
-      </mat-card-title>
-      <mat-card-subtitle>Faça login para acessar o sistema</mat-card-subtitle>
-    </mat-card-header>
+<div class="min-h-screen w-full flex items-center justify-center bg-dark-bg relative overflow-hidden font-sans">
+  <!-- Decorative Background Glows -->
+  <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-primary/10 rounded-full blur-3xl -z-10 animate-pulse"></div>
+  <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-brand-accent/10 rounded-full blur-3xl -z-10 animate-pulse" style="animation-delay: 2s;"></div>
 
-    <mat-card-content>
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Email</mat-label>
-          <input matInput type="email" formControlName="email" placeholder="seu@email.com">
-          <mat-icon matSuffix>email</mat-icon>
-          <mat-error *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
-            {{ getErrorMessage('email') }}
-          </mat-error>
-        </mat-form-field>
+  <div class="w-full max-w-md p-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] transition-all duration-300 hover:border-white/20">
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-tr from-brand-primary to-brand-accent shadow-lg shadow-brand-primary/30 mb-4">
+        <span class="material-icons text-white text-3xl">admin_panel_settings</span>
+      </div>
+      <h2 class="text-2xl font-bold text-white tracking-tight">Administração ECC</h2>
+      <p class="text-gray-400 text-sm mt-1">Faça login para acessar o sistema</p>
+    </div>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Senha</mat-label>
-          <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="senha" placeholder="Sua senha">
-          <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
-            <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
-          </button>
-          <mat-error *ngIf="loginForm.get('senha')?.invalid && loginForm.get('senha')?.touched">
-            {{ getErrorMessage('senha') }}
-          </mat-error>
-        </mat-form-field>
-
-        <div class="error-message" *ngIf="errorMessage">
-          <mat-icon>error</mat-icon>
-          {{ errorMessage }}
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      <div>
+        <label for="email" class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Email</label>
+        <div class="relative">
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            placeholder="seu@email.com"
+            class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all duration-200"
+          />
+          <span class="material-icons absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 text-lg">email</span>
         </div>
+        <p *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="text-red-400 text-xs mt-1">
+          {{ getErrorMessage('email') }}
+        </p>
+      </div>
 
-        <button mat-raised-button color="primary" type="submit" 
-                [disabled]="loginForm.invalid || loading" class="login-button">
-          <mat-spinner diameter="20" *ngIf="loading"></mat-spinner>
-          <span *ngIf="!loading">Entrar</span>
-          <span *ngIf="loading">Entrando...</span>
-        </button>
-      </form>
-    </mat-card-content>
-  </mat-card>
+      <div>
+        <label for="senha" class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Senha</label>
+        <div class="relative">
+          <input
+            id="senha"
+            [type]="hidePassword ? 'password' : 'text'"
+            formControlName="senha"
+            placeholder="Sua senha"
+            class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary transition-all duration-200"
+          />
+          <button
+            (click)="hidePassword = !hidePassword"
+            type="button"
+            class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors"
+          >
+            <span class="material-icons text-lg">{{ hidePassword ? 'visibility_off' : 'visibility' }}</span>
+          </button>
+        </div>
+        <p *ngIf="loginForm.get('senha')?.invalid && loginForm.get('senha')?.touched" class="text-red-400 text-xs mt-1">
+          {{ getErrorMessage('senha') }}
+        </p>
+      </div>
+
+      <div *ngIf="errorMessage" class="flex items-center gap-2 px-4 py-3 bg-red-500/10 border border-red-500/20 text-red-200 text-sm rounded-xl animate-shake">
+        <span class="material-icons text-lg text-red-400">error</span>
+        <span>{{ errorMessage }}</span>
+      </div>
+
+      <button
+        type="submit"
+        [disabled]="loginForm.invalid || loading"
+        class="w-full py-3 px-4 bg-gradient-to-r from-brand-primary to-brand-accent hover:opacity-95 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-xl shadow-lg shadow-brand-primary/20 hover:shadow-brand-accent/30 transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2"
+      >
+        <svg *ngIf="loading" class="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <span>{{ loading ? 'Entrando...' : 'Entrar' }}</span>
+      </button>
+    </form>
+  </div>
 </div>
+
 

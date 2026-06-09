@@ -1,4 +1,14 @@
-/* You can add global styles to this file, and also import other style files */
+@use "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", "Outfit", "Helvetica Neue", sans-serif;
+  --font-display: "Outfit", sans-serif;
+  
+  --color-brand-primary: #6366f1;
+  --color-brand-accent: #a855f7;
+  --color-dark-bg: #090b11;
+  --color-dark-card: rgba(255, 255, 255, 0.05);
+}
 
 /* Estilos globais para o aplicativo */
 html, body { 
@@ -7,10 +17,11 @@ html, body {
 }
 
 body { 
-  font-family: Roboto, "Helvetica Neue", sans-serif; 
-  background-color: #f5f5f5;
-  color: #333333;
+  font-family: var(--font-sans); 
+  background-color: var(--color-dark-bg);
+  color: #f3f4f6;
 }
+
 
 /* Tema personalizado com cores sóbrias */
 :root {
@@ -84,5 +95,345 @@ body {
   margin-bottom: 20px;
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+/* Overrides para tabelas do Angular Material e paginação */
+.mat-table-custom, mat-table {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.mat-mdc-table {
+  background: transparent !important;
+}
+
+.mat-mdc-header-cell {
+  color: rgba(255, 255, 255, 0.4) !important;
+  font-weight: 600 !important;
+  font-family: var(--font-sans) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  padding: 12px 16px !important;
+}
+
+.mat-mdc-cell {
+  color: #e5e7eb !important;
+  font-family: var(--font-sans) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  padding: 12px 16px !important;
+}
+
+.mat-mdc-row {
+  transition: background-color 0.2s ease !important;
+}
+
+.mat-mdc-row:hover {
+  background-color: rgba(255, 255, 255, 0.02) !important;
+}
+
+.mat-mdc-paginator {
+  background: transparent !important;
+  color: #9ca3af !important;
+  font-family: var(--font-sans) !important;
+}
+
+.mat-mdc-paginator-page-size-label, 
+.mat-mdc-paginator-range-label {
+  color: #9ca3af !important;
+}
+
+.mat-mdc-icon-button {
+  color: #9ca3af !important;
+}
+
+/* Overrides para mat-card */
+.mat-mdc-card {
+  background-color: rgba(255, 255, 255, 0.03) !important;
+  backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3) !important;
+  color: #fff !important;
+}
+
+.mat-mdc-card-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  padding-bottom: 16px !important;
+  margin-bottom: 24px !important;
+}
+
+.mat-mdc-card-title {
+  color: #fff !important;
+  font-family: var(--font-display) !important;
+  font-weight: 700 !important;
+}
+
+.mat-mdc-card-subtitle {
+  color: #9ca3af !important;
+  font-size: 13px !important;
+}
+
+/* Overrides para campos de formulário Material (Estilo Login Premium) */
+.mat-mdc-form-field {
+  width: 100% !important;
+}
+
+.mat-mdc-form-field .mdc-text-field--outlined:not(.mdc-text-field--disabled) {
+  background-color: rgba(255, 255, 255, 0.05) !important; /* bg-white/5 */
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;   /* border-white/10 */
+  border-radius: 12px !important;                          /* rounded-xl */
+  padding: 0 16px !important;                               /* px-4 */
+  transition: all 0.2s ease !important;
+}
+
+.mat-mdc-form-field .mdc-text-field--outlined:not(.mdc-text-field--disabled):hover {
+  border-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+.mat-mdc-form-field.mat-focused .mdc-text-field--outlined:not(.mdc-text-field--disabled) {
+  border-color: #6366f1 !important;                         /* focus:border-brand-primary */
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.5) !important;  /* focus:ring-2 focus:ring-brand-primary/50 */
+}
+
+/* Oculta as bordas do notch original do Material, mantendo o container para a label */
+.mat-mdc-form-field .mdc-notched-outline__leading,
+.mat-mdc-form-field .mdc-notched-outline__notch,
+.mat-mdc-form-field .mdc-notched-outline__trailing {
+  border: none !important;
+}
+
+
+
+.mat-mdc-form-field-error {
+  color: #f87171 !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+}
+
+/* Overrides para Stepper do Material */
+.mat-stepper-horizontal, .mat-stepper-vertical {
+  background: transparent !important;
+  font-family: var(--font-sans) !important;
+}
+
+.mat-step-header {
+  background: transparent !important;
+  border-radius: 12px !important;
+  transition: background-color 0.2s ease !important;
+}
+
+.mat-step-header:hover {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.mat-step-header .mat-step-icon {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: #d1d5db !important;
+}
+
+.mat-step-header .mat-step-icon-selected, 
+.mat-step-header .mat-step-icon-state-edit {
+  background-color: #6366f1 !important;
+  color: #fff !important;
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.4) !important;
+}
+
+.mat-step-label {
+  color: #9ca3af !important;
+  font-weight: 500 !important;
+}
+
+.mat-step-label-selected {
+  color: #fff !important;
+  font-weight: 700 !important;
+}
+
+.mat-stepper-horizontal-line {
+  border-top-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Checkboxes e botões padrão */
+.mdc-checkbox {
+  --mdc-checkbox-selected-icon-color: #6366f1 !important;
+  --mdc-checkbox-selected-focus-icon-color: #6366f1 !important;
+  --mdc-checkbox-selected-hover-icon-color: #6366f1 !important;
+  --mdc-checkbox-unselected-icon-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.mdc-label {
+  color: #d1d5db !important;
+  font-family: var(--font-sans) !important;
+  font-size: 13px !important;
+}
+
+/* Botões do Material customizados */
+.mat-mdc-raised-button.mat-primary {
+  background-color: #6366f1 !important;
+  color: #fff !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3) !important;
+  transition: all 0.2s ease !important;
+}
+
+.mat-mdc-raised-button.mat-primary:hover:not(:disabled) {
+  opacity: 0.95 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4) !important;
+}
+
+.mat-mdc-raised-button.mat-primary:active:not(:disabled) {
+  transform: translateY(0) !important;
+}
+
+/* Ajustes para labels de campos Material no modo escuro (Estilo Login Premium) */
+.mat-mdc-form-field {
+  margin-top: 24px !important;
+  overflow: visible !important;
+}
+
+.mat-mdc-form-field .mat-mdc-text-field-wrapper,
+.mat-mdc-form-field .mdc-text-field {
+  overflow: visible !important;
+}
+
+.mat-mdc-form-field .mdc-floating-label {
+  color: rgba(255, 255, 255, 0.5) !important;
+  font-family: var(--font-sans) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  transform: translateY(-24px) scale(0.9) !important;
+  transform-origin: top left !important;
+  background-color: transparent !important;
+  padding: 0 !important;
+  display: block !important;
+  width: max-content !important;
+  max-width: none !important;
+  overflow: visible !important;
+}
+
+.mat-mdc-form-field.mat-focused .mdc-floating-label {
+  color: #6366f1 !important;
+}
+
+/* Garante que o notch e seus pais não cortem as labels por conta de largura e overflow */
+.mat-mdc-form-field .mdc-notched-outline,
+.mat-mdc-form-field .mdc-notched-outline__notch,
+.mat-mdc-form-field .mdc-notched-outline__leading,
+.mat-mdc-form-field .mdc-notched-outline__trailing {
+  overflow: visible !important;
+  width: auto !important;
+  max-width: none !important;
+}
+
+.mat-mdc-form-field input.mat-mdc-input-element,
+.mat-mdc-form-field textarea.mat-mdc-input-element,
+.mat-mdc-form-field .mat-mdc-select-trigger {
+  font-size: 13px !important;
+  font-family: var(--font-sans) !important;
+  color: #ffffff !important;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+}
+
+.mat-mdc-form-field .mat-mdc-select-value {
+  color: #ffffff !important;
+}
+
+/* Overrides para Modais / Diálogos do Angular Material */
+.cdk-overlay-pane {
+  max-width: 90vw !important;
+}
+
+.mat-mdc-dialog-container {
+  background-color: rgba(15, 18, 30, 0.95) !important;
+  backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5) !important;
+  padding: 0 !important; /* Remove container double padding */
+}
+
+.mat-mdc-dialog-container .mat-mdc-dialog-surface {
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 24px !important; /* Apply padding to surface */
+}
+
+.mat-mdc-dialog-container .mat-mdc-card {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  padding: 0 !important;
+}
+
+.mat-mdc-dialog-container .mat-mdc-card-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  padding: 0 0 16px 0 !important;
+  margin-bottom: 20px !important;
+}
+
+.mat-mdc-dialog-container .mat-mdc-card-content {
+  padding: 16px 0 0 0 !important;
+}
+
+.mat-mdc-dialog-container .mat-mdc-form-field {
+  margin-top: 20px !important;
+  margin-bottom: 0 !important;
+}
+
+/* Botão fechar / cancelamento */
+.btn-fechar {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  color: #d1d5db !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+  transition: all 0.2s ease !important;
+  height: 36px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.btn-fechar:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: #fff !important;
+}
+
+/* Overrides para painéis de Autocomplete e Selects do Material */
+.mat-mdc-autocomplete-panel,
+.mat-mdc-select-panel {
+  background-color: rgba(15, 18, 30, 0.98) !important;
+  backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+}
+
+.mat-mdc-option {
+  color: #d1d5db !important; /* text-gray-300 */
+  font-family: var(--font-sans) !important;
+  font-size: 13px !important;
+}
+
+.mat-mdc-option:hover:not(.mdc-list-item--disabled),
+.mat-mdc-option.mat-mdc-option-active {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  color: #ffffff !important;
+}
+
+.mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+  background-color: rgba(99, 102, 241, 0.15) !important;
+  color: #ffffff !important;
+}

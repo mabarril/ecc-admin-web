@@ -1,76 +1,188 @@
-<div class="dashboard-container">
-  <div class="dashboard-content">
-    <h1>Bem-vindo ao Painel de Administração</h1>
-    <p>Gerencie casais, eventos e convites de forma eficiente.</p>
+<div class="space-y-8 animate-fade-in font-sans">
+  
+  <!-- Cabeçalho do Dashboard -->
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div>
+      <h1 class="text-3xl font-extrabold text-white tracking-tight">Visão Geral</h1>
+      <p class="text-gray-400 text-sm mt-1">Gerencie casais, eventos e relatórios de forma ágil e centralizada.</p>
+    </div>
+    <div class="flex items-center gap-3">
+      <button (click)="openCadastraCasal()" 
+              class="px-4 py-2.5 bg-gradient-to-r from-brand-primary to-brand-accent hover:opacity-95 text-white text-sm font-semibold rounded-xl shadow-lg shadow-brand-primary/20 hover:shadow-brand-accent/30 transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0 flex items-center gap-2">
+        <span class="material-icons text-sm">person_add</span>
+        <span>Cadastrar Casal</span>
+      </button>
+    </div>
+  </div>
 
+  <!-- Cartões de Estatísticas -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    
+    <!-- Card: Total de Casais -->
+    <div class="p-6 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl flex items-center justify-between hover:border-white/20 transition-all duration-200">
+      <div>
+        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Total de Casais</p>
+        <h3 class="text-4xl font-extrabold text-white mt-2">{{ listaCasais?.length || 0 }}</h3>
+        <span class="text-emerald-400 text-xs font-medium flex items-center gap-1 mt-1">
+          <span class="material-icons text-xs">trending_up</span>
+          <span>+12% este mês</span>
+        </span>
+      </div>
+      <div class="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400">
+        <span class="material-icons text-2xl">people</span>
+      </div>
+    </div>
 
-    <div class="board">
-      <div class="row">
-        <div class="col">
-          <mat-card class="card">
-            <mat-card-header>
-              <mat-card-title>Inscritos no Evento</mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-            </mat-card-content>
-            <mat-card-actions align="end">
-              <button mat-button (click)="openListaInscricao()">Inscrições</button>
-            </mat-card-actions>
-          </mat-card>
+    <!-- Card: Eventos Ativos -->
+    <div class="p-6 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl flex items-center justify-between hover:border-white/20 transition-all duration-200">
+      <div>
+        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Eventos Ativos</p>
+        <h3 class="text-4xl font-extrabold text-white mt-2">{{ eventos?.length || 0 }}</h3>
+        <span class="text-emerald-400 text-xs font-medium flex items-center gap-1 mt-1">
+          <span class="material-icons text-xs">event_available</span>
+          <span>Ativos no momento</span>
+        </span>
+      </div>
+      <div class="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400">
+        <span class="material-icons text-2xl">event</span>
+      </div>
+    </div>
+
+    <!-- Card: Inscrições Ativas -->
+    <div class="p-6 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl flex items-center justify-between hover:border-white/20 transition-all duration-200">
+      <div>
+        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Inscrições Realizadas</p>
+        <h3 class="text-4xl font-extrabold text-white mt-2">452</h3>
+        <span class="text-emerald-400 text-xs font-medium flex items-center gap-1 mt-1">
+          <span class="material-icons text-xs">trending_up</span>
+          <span>+8% esta semana</span>
+        </span>
+      </div>
+      <div class="w-12 h-12 rounded-xl bg-pink-500/10 flex items-center justify-center text-pink-400">
+        <span class="material-icons text-2xl">assignment_turned_in</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Seção Principal de Painéis -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    
+    <!-- Coluna da Esquerda: Gráfico de Inscrições Recentes -->
+    <div class="lg:col-span-2 p-6 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl hover:border-white/20 transition-all duration-200 flex flex-col justify-between">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h3 class="text-lg font-bold text-white">Inscrições por ECC</h3>
+          <p class="text-gray-400 text-xs mt-0.5">Visão histórica das últimas edições</p>
         </div>
+        <div class="px-3 py-1 bg-white/5 rounded-lg border border-white/10 text-xs text-gray-300">
+          Edição: 2026
+        </div>
+      </div>
+      
+      <!-- Visualizador do Gráfico SVG (Sleek Modern Double Line Graph) -->
+      <div class="h-48 w-full mt-4 relative">
+        <svg class="w-full h-full" viewBox="0 0 500 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Grid lines -->
+          <line x1="0" y1="25" x2="500" y2="25" stroke="rgba(255, 255, 255, 0.05)" stroke-dasharray="4" />
+          <line x1="0" y1="75" x2="500" y2="75" stroke="rgba(255, 255, 255, 0.05)" stroke-dasharray="4" />
+          <line x1="0" y1="125" x2="500" y2="125" stroke="rgba(255, 255, 255, 0.05)" stroke-dasharray="4" />
+          
+          <!-- Line violet -->
+          <path d="M0 130 C 50 110, 100 70, 150 90 C 200 110, 250 40, 300 50 C 350 60, 400 20, 450 30 C 475 35, 500 10, 500 10" 
+                stroke="url(#purpleGlow)" stroke-width="3" stroke-linecap="round" />
+          <!-- Line blue -->
+          <path d="M0 110 C 50 90, 100 110, 150 80 C 200 50, 250 85, 300 45 C 350 5, 400 35, 450 15 C 475 5, 500 5, 500 5" 
+                stroke="url(#blueGlow)" stroke-width="3" stroke-linecap="round" />
 
-        <div class="col">
-          <mat-card class="card">
-            <mat-card-header>
-              <mat-card-title>Cadastro de Casais</mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-            </mat-card-content>
-            <mat-card-actions align="end">
-              <button mat-button (click)="openListasCadastros()">Listar Cadastros</button>
-              <button mat-button (click)="openCadastraCasal()">Cadastrar</button>
-            </mat-card-actions>
-          </mat-card>
+          <!-- Gradients -->
+          <defs>
+            <linearGradient id="purpleGlow" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#a855f7" />
+              <stop offset="100%" stop-color="#6366f1" />
+            </linearGradient>
+            <linearGradient id="blueGlow" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#06b6d4" />
+              <stop offset="100%" stop-color="#3b82f6" />
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+
+      <div class="flex justify-between items-center text-[10px] text-gray-500 font-semibold uppercase tracking-wider mt-4 px-2">
+        <span>ECC 2024</span>
+        <span>ECC 2025</span>
+        <span>ECC 2026</span>
+      </div>
+    </div>
+
+    <!-- Coluna da Direita: Painel de Ações Rápidas & Atividades -->
+    <div class="space-y-6 flex flex-col justify-between h-full">
+      
+      <!-- Ações Rápidas -->
+      <div class="p-6 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl hover:border-white/20 transition-all duration-200">
+        <h3 class="text-lg font-bold text-white mb-4">Ações Rápidas</h3>
+        <div class="grid grid-cols-2 gap-4">
+          <button (click)="openListaInscricao()" 
+                  class="flex flex-col items-center justify-center p-4 bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/10 rounded-xl transition-all duration-200 text-center gap-2 group">
+            <span class="material-icons text-brand-primary text-2xl group-hover:scale-110 transition-transform">assignment</span>
+            <span class="text-xs font-semibold text-gray-300">Inscrições</span>
+          </button>
+          
+          <button (click)="openListasCadastros()" 
+                  class="flex flex-col items-center justify-center p-4 bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/10 rounded-xl transition-all duration-200 text-center gap-2 group">
+            <span class="material-icons text-brand-accent text-2xl group-hover:scale-110 transition-transform">people</span>
+            <span class="text-xs font-semibold text-gray-300">Lista Casais</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Feed de Atividade Recente -->
+      <div class="p-6 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl hover:border-white/20 transition-all duration-200 flex-1">
+        <h3 class="text-lg font-bold text-white mb-4">Atividade Recente</h3>
+        <div class="space-y-4">
+          
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400 mt-0.5">
+              <span class="material-icons text-sm">person_add</span>
+            </div>
+            <div>
+              <p class="text-xs font-semibold text-gray-200">Novo Casal Cadastrado</p>
+              <p class="text-[10px] text-gray-400">Ana & Carlos cadastrados • há 2 min</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center text-indigo-400 mt-0.5">
+              <span class="material-icons text-sm">assignment_turned_in</span>
+            </div>
+            <div>
+              <p class="text-xs font-semibold text-gray-200">Inscrição Confirmada</p>
+              <p class="text-[10px] text-gray-400">ECC Casais 2024 • há 15 min</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400 mt-0.5">
+              <span class="material-icons text-sm">event</span>
+            </div>
+            <div>
+              <p class="text-xs font-semibold text-gray-200">Evento Atualizado</p>
+              <p class="text-[10px] text-gray-400">Datas ajustadas no sistema • há 1 hora</p>
+            </div>
+          </div>
 
         </div>
       </div>
 
     </div>
 
-
-
-    <!-- Seção de Estatísticas (placeholder) -->
-    <div class="stats-section">
-      <mat-card class="stat-card">
-        <mat-card-content>
-          <div class="stat-content">
-            <mat-icon class="stat-icon">people</mat-icon>
-            <div class="stat-info">
-              <div class="stat-number">{{ listaCasais?.length || 0 }}</div>
-              <div class="stat-label">Casais Cadastrados</div>
-            </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
-
-      <mat-card class="stat-card">
-        <mat-card-content>
-          <div class="stat-content">
-            <mat-icon class="stat-icon">event</mat-icon>
-            <div class="stat-info">
-              <div class="stat-number">{{ eventos.length }}</div>
-              <div class="stat-label">Eventos Ativos</div>
-            </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
-    </div>
-
   </div>
+
 </div>
 
 <!-- Loading overlay -->
-<div class="loading-overlay" *ngIf="loading">
-  <mat-spinner diameter="50"></mat-spinner>
-  <p>Carregando dados...</p>
+<div class="fixed inset-0 bg-dark-bg/80 backdrop-blur-sm flex flex-col justify-center items-center z-50 animate-fade-in" *ngIf="loading">
+  <div class="animate-spin rounded-full h-12 w-12 border-4 border-brand-primary border-t-transparent"></div>
+  <p class="mt-4 text-gray-300 font-semibold text-sm">Carregando dados do painel...</p>
 </div>
