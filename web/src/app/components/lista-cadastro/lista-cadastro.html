@@ -3,20 +3,18 @@
     <div class="col">
         <div class="col">
             <span class="text-muted">
-                <strong>Casais cadastrados:</strong> {{ listaCasais.length }}
+                <strong>Casais cadastrados:</strong> {{ listaCasais.data.length }}
             </span>
         </div>
     </div>
 </div>
 <mat-card-actions>
     <button mat-raised-button color="primary" (click)="cadastrarCasal()">Cadastrar Casal</button>
-    <!-- <button mat-raised-button color="primary" (click)="generatePdf()">Exportar para PDF</button> -->
-    <!-- <button mat-raised-button color="warn" (click)="imprimirTodasFichas(eventoSelecionado)">Imprimir Fichas</button> -->
 </mat-card-actions>
 <app-ficha-pdf #fichaPdf></app-ficha-pdf>
 
 <!-- Tabela de inscrições -->
-<div *ngIf="listaCasais?.length">
+<div *ngIf="listaCasais?.data?.length">
     <div class="row">
         <h2>Lista de Cadastro</h2>
     </div>
@@ -24,52 +22,41 @@
 
         <mat-form-field class="col-3" appearance="outline">
             <mat-label>Pesquisar Casal</mat-label>
-            <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Ex. João ou Maria" #input>
         </mat-form-field>
     </div>
     <div class="row">
         <mat-card class="full-width">
-            <mat-table [dataSource]="listaCasais" class="mat-elevation-z2">
-                <!-- Nome Column -->
+            <mat-table [dataSource]="listaCasais" matSort class="mat-elevation-z2">
+                <!-- ID Column -->
                 <ng-container matColumnDef="id">
-                    <mat-header-cell *matHeaderCellDef> Casal </mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> ID </mat-header-cell>
                     <mat-cell *matCellDef="let casais"> {{casais.id}} </mat-cell>
                 </ng-container>
 
-                <!-- Nome Column -->
+                <!-- Casal Column -->
                 <ng-container matColumnDef="casal">
-                    <mat-header-cell *matHeaderCellDef> Nome </mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Casal </mat-header-cell>
                     <mat-cell *matCellDef="let casais"> {{casais.nome_esposo}} e {{casais.nome_esposa}} </mat-cell>
                 </ng-container>
-                <!-- Email Column -->
-                <!-- 
-                <ng-container matColumnDef="email">
-                    <mat-header-cell *matHeaderCellDef> Email </mat-header-cell>
-                    <mat-cell *matCellDef="let inscricao"> {{inscricao.email}} </mat-cell>
-                </ng-container> -->
-     <!-- Actions Column -->
+
+                <!-- Actions Column -->
                 <ng-container matColumnDef="actions">
                     <mat-header-cell *matHeaderCellDef> </mat-header-cell>
                     <mat-cell *matCellDef="let casais">
-                        <!-- <button mat-icon-button (click)="copiarUrl(inscricao)" matTooltip="Copiar link de inscrição">
-                            <mat-icon>link</mat-icon>
-                        </button> -->
-                        <button mat-icon-button (click)="editarCasal(casais.id)">
+                        <button mat-icon-button (click)="editarCasal(casais.id)" matTooltip="Editar cadastro">
                             <mat-icon>edit</mat-icon>
                         </button>
-                        <!-- <button mat-icon-button style="color: red;" (click)="deleteInscricao(inscricao.id)">
-                            <mat-icon>delete</mat-icon>
-                        </button> -->
-                        <button mat-icon-button (click)="fichaPdf?.buscarCasalEExibirPDF(casais.id)">
+                        <button mat-icon-button (click)="fichaPdf?.buscarCasalEExibirPDF(casais.id)" matTooltip="Visualizar PDF">
                             <mat-icon>picture_as_pdf</mat-icon>
                         </button>
-
                     </mat-cell>
                 </ng-container>
 
                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                 <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
             </mat-table>
+            <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons></mat-paginator>
         </mat-card>
     </div>
 </div>

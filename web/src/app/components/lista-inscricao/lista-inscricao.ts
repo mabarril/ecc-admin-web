@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -11,7 +11,9 @@ import { UrlsUnicasService } from '../../services/urls-unicas.service';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatLabel } from '@angular/material/form-field';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableModule, MatTableDataSource } from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { CasaisService } from '../../services/casais.service';
 import { EventosService } from '../../services/eventos.service';
 import { InscricoesService } from '../../services/inscricoes.service';
@@ -22,6 +24,7 @@ import { Subject, takeUntil, forkJoin } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatMenuModule } from '@angular/material/menu';
 import { Utils } from '../../services/utils';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ExcelExportService } from '../../services/excel-export.service';
 import { ListaFilhos } from '../lista-filhos/lista-filhos';
 import { jsPDF } from 'jspdf';
@@ -76,6 +79,8 @@ interface Inscricao {
     ReactiveFormsModule,
     FichaPdfComponent,
     MatMenuModule,
+    MatPaginatorModule,
+    MatSortModule
   ],
   templateUrl: './lista-inscricao.html',
   styleUrl: './lista-inscricao.scss'
@@ -89,7 +94,7 @@ export class ListaInscricao implements OnInit {
   loading = false;
   eventoSelecionado: number | null = null;
   inscricoes: Inscricao[] = [];
-  listaInscritos: any[] = [];
+  listaInscritos = new MatTableDataSource<any>([]);
   listaInscritosOriginal: any[] = [];
   displayedColumns: string[] = ['id', 'nome', 'tipo_participante', 'status', 'actions'];
   fichaPdf?: FichaPdfComponent;
@@ -98,6 +103,9 @@ export class ListaInscricao implements OnInit {
   utils = Utils;
   relacaoCasais: any[] = [];
   relacaoFilhos: any[] = [];
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
 
   constructor(
@@ -190,8 +198,22 @@ export class ListaInscricao implements OnInit {
             quarto: inscricao.quarto
           };
         });
-        this.listaInscritos.sort((a, b) => a.casal.nome.localeCompare(b.casal.nome));
-        this.listaInscritosOriginal = [...this.listaInscritos];
+        this.listaInscritosOriginal = [...mapped];
+        this.listaInscritos = new MatTableDataSource<any>(mapped);
+        this.listaInscritos.paginator = this.paginator;
+        
+        this.listaInscritos.sortingDataAccessor = (item, property) => {
+          switch (property) {
+            case 'nome': return item.casal?.nome?.toLowerCase() || '';
+            default: return item[property];
+          }
+        };
+        
+        this.listaInscritos.filterPredicate = (data, filter) => {
+          return data.casal?.nome?.toLowerCase().includes(filter) || false;
+        };
+        
+        this.listaInscritos.sort = this.sort;
         this.carregarListaFilhos(this.listaInscritosOriginal);
       },
       error: (error: HttpErrorResponse) => {
@@ -207,10 +229,8 @@ export class ListaInscricao implements OnInit {
   }
 
   applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
-    this.listaInscritos = this.listaInscritosOriginal.filter(casal =>
-      casal.casal.nome.toLowerCase().includes(filterValue)
-    );
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.listaInscritos.filter = filterValue.trim().toLowerCase();
   }
 
   editarCasal(casalId: number) {
@@ -1007,29 +1027,10 @@ export class ListaInscricao implements OnInit {
   selector: 'dialog-inscricao',
   templateUrl: 'dialog-inscricao.html',
   styleUrls: ['./lista-inscricao.scss'],
-  imports: [CommonModule, MatDialogModule, MatCardModule, MatCheckboxModule, MatButtonModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule, ReactiveFormsModule, MatIconModule],
+  imports: [CommonModule, MatDialogModule, MatCardModule, MatCheckboxModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule, ReactiveFormsModule, MatIconModule, MatAutocompleteModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DialogInscricao {
-
-  constructor(
-    private fb: FormBuilder,
-    private snackBar: MatSnackBar,
-    private urlsUnicasService: UrlsUnicasService,
-    private inscricoesService: InscricoesService,
-    private eventosService: EventosService
-  ) {
-    this.conviteForm = this.fb.group({
-      casal_id: ['', Validators.required],
-      padrinho_id: [''], // Campo para selecionar o padrinho
-      evento_id: this.data.eventos, // Preenche com o evento selecionado
-      url_inscricao: [''],
-    });
-  }
-
-  changeAfilhado() {
-    this.afilhado = !this.afilhado;
-  }
 
   conviteForm: FormGroup;
   readonly dialogRef = inject(MatDialogRef<DialogInscricao>);
@@ -1044,14 +1045,59 @@ export class DialogInscricao {
   enviandoConvite = false;
   afilhado = false;
 
+  filteredCasais: any[] = [];
+  filteredPadrinhos: any[] = [];
+
+  constructor(
+    private fb: FormBuilder,
+    private snackBar: MatSnackBar,
+    private urlsUnicasService: UrlsUnicasService,
+    private inscricoesService: InscricoesService,
+    private eventosService: EventosService
+  ) {
+    this.conviteForm = this.fb.group({
+      casal_id: ['', Validators.required],
+      padrinho_id: [''], // Campo para selecionar o padrinho
+      evento_id: this.data.eventos, // Preenche com o evento selecionado
+      url_inscricao: [''],
+    });
+
+    this.filteredCasais = this.listaCasais;
+    this.filteredPadrinhos = this.listaCasais;
+
+    this.conviteForm.get('casal_id')?.valueChanges.subscribe(value => {
+      const filterValue = typeof value === 'string' ? value.toLowerCase() : (value?.nome?.toLowerCase() || '');
+      this.filteredCasais = this.listaCasais.filter(casal => casal.nome.toLowerCase().includes(filterValue));
+    });
+
+    this.conviteForm.get('padrinho_id')?.valueChanges.subscribe(value => {
+      const filterValue = typeof value === 'string' ? value.toLowerCase() : (value?.nome?.toLowerCase() || '');
+      this.filteredPadrinhos = this.listaCasais.filter(casal => casal.nome.toLowerCase().includes(filterValue));
+    });
+  }
+
+  changeAfilhado() {
+    this.afilhado = !this.afilhado;
+  }
+
+  displayCasalFn(casal: any): string {
+    return casal ? casal.nome : '';
+  }
+
   inscreverCasal(): void {
     this.enviandoConvite = true;
+    let casalVal = this.conviteForm.value.casal_id;
+    let padrinhoVal = this.conviteForm.value.padrinho_id;
+
+    let casalId = typeof casalVal === 'object' ? casalVal.id : casalVal;
+    let padrinhoId = typeof padrinhoVal === 'object' ? padrinhoVal.id : padrinhoVal;
+
     let inscricao = {
-      casal_id: this.conviteForm.value.casal_id,
+      casal_id: casalId,
       evento_id: this.eventosService.getEventoSelecionado(),
       tipo_participante: this.afilhado ? 'convidado' : 'encontrista',
       status: 'pendente',
-      padrinho_id: this.afilhado ? this.conviteForm.value.padrinho_id : 0,
+      padrinho_id: this.afilhado ? padrinhoId : 0,
     };
 
     this.inscricoesService.registrarInscricao(inscricao)

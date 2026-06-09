@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Inject, inject, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, inject, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -11,7 +11,9 @@ import { UrlsUnicasService } from '../../services/urls-unicas.service';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatLabel } from '@angular/material/form-field';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableModule, MatTableDataSource } from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { CasaisService } from '../../services/casais.service';
 import { EventosService } from '../../services/eventos.service';
 import { InscricoesService } from '../../services/inscricoes.service';
@@ -44,7 +46,9 @@ interface Casal {
     MatIconModule,
     MatCheckboxModule,
     ReactiveFormsModule,
-    FichaPdfComponent,],
+    FichaPdfComponent,
+    MatPaginatorModule,
+    MatSortModule],
   templateUrl: './lista-cadastro.html',
   styleUrl: './lista-cadastro.scss'
 })
@@ -54,7 +58,7 @@ export class ListaCadastro implements OnInit {
 
   urlCompleta: string = '';
   readonly dialog = inject(MatDialog);
-  listaCasais: Casal[] = [];
+  listaCasais = new MatTableDataSource<Casal>([]);
   listaCasaisOriginal: Casal[] = [];
   loading = false;
   eventoSelecionado: number | null = null;
@@ -62,6 +66,9 @@ export class ListaCadastro implements OnInit {
   fichaPdf?: FichaPdfComponent;
   private casaisMap: Map<number, Casal> = new Map();
   private destroy$ = new Subject<void>();
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private casaisService: CasaisService,
@@ -112,10 +119,8 @@ export class ListaCadastro implements OnInit {
   }
 
   applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
-    this.listaCasais = this.listaCasaisOriginal.filter(casal =>
-      casal.nome_esposa.toLowerCase().includes(filterValue) || casal.nome_esposo.toLowerCase().includes(filterValue)
-    );
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.listaCasais.filter = filterValue.trim().toLowerCase();
   }
 
  
@@ -151,7 +156,7 @@ export class ListaCadastro implements OnInit {
 
 
   carregaListaCasais(casais: any[]): void {
-    this.listaCasais = casais.map(casal => {
+    const mapped = casais.map(casal => {
       const esposo = casal.pessoas.find((p: any) => p.tipo === 'esposo')?.nome_social || '';
       const esposa = casal.pessoas.find((p: any) => p.tipo === 'esposa')?.nome_social || '';
       return {
@@ -159,14 +164,22 @@ export class ListaCadastro implements OnInit {
         nome_esposo: esposo,
         nome_esposa: esposa        
       };
-    }).sort((a, b) => {
-      const nomeA = a.nome_esposo.toLowerCase();
-      const nomeB = b.nome_esposo.toLowerCase();
-      if (nomeA !== nomeB) return nomeA.localeCompare(nomeB);
-      return a.nome_esposa.toLowerCase().localeCompare(b.nome_esposa.toLowerCase());
     });
-    this.casaisMap = new Map(this.listaCasais.map(casal => [casal.id, casal]));
-    this.listaCasaisOriginal = [...this.listaCasais];
+    
+    this.listaCasaisOriginal = [...mapped];
+    this.listaCasais = new MatTableDataSource<Casal>(mapped);
+    this.listaCasais.paginator = this.paginator;
+    
+    // Configura ordenação customizada para a coluna conjugada "casal"
+    this.listaCasais.sortingDataAccessor = (item, property) => {
+      switch (property) {
+        case 'casal': return `${item.nome_esposo} e ${item.nome_esposa}`.toLowerCase();
+        default: return (item as any)[property];
+      }
+    };
+    this.listaCasais.sort = this.sort;
+    
+    this.casaisMap = new Map(mapped.map(casal => [casal.id, casal]));
   }
 
  

@@ -15,26 +15,36 @@
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Selecione Casal</mat-label>
-        <mat-select formControlName="casal_id">
-          <mat-option *ngFor="let casal of listaCasais" [value]="casal.id">
+        <input type="text"
+               placeholder="Digite o nome do casal..."
+               matInput
+               formControlName="casal_id"
+               [matAutocomplete]="autoCasal">
+        <mat-autocomplete #autoCasal="matAutocomplete" [displayWith]="displayCasalFn">
+          <mat-option *ngFor="let casal of filteredCasais" [value]="casal">
             {{ casal.nome }}
           </mat-option>
-        </mat-select>
+        </mat-autocomplete>
         <mat-error *ngIf="conviteForm.get('casal_id')?.invalid && conviteForm.get('casal_id')?.touched">
-          Selecione um casal
+          Selecione um casal válido
         </mat-error>
       </mat-form-field>
 
       <div class="form-row" *ngIf="afilhado"  style="padding-top: 0.5em;">
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Selecione Padrinho</mat-label>
-          <mat-select formControlName="padrinho_id">
-            <mat-option *ngFor="let casal of listaCasais" [value]="casal.id">
+          <input type="text"
+                 placeholder="Digite o nome do padrinho..."
+                 matInput
+                 formControlName="padrinho_id"
+                 [matAutocomplete]="autoPadrinho">
+          <mat-autocomplete #autoPadrinho="matAutocomplete" [displayWith]="displayCasalFn">
+            <mat-option *ngFor="let casal of filteredPadrinhos" [value]="casal">
               {{ casal.nome }}
             </mat-option>
-          </mat-select>
+          </mat-autocomplete>
           <mat-error *ngIf="conviteForm.get('padrinho_id')?.invalid && conviteForm.get('padrinho_id')?.touched">
-            Selecione um casal padrinho
+            Selecione um casal padrinho válido
           </mat-error>
         </mat-form-field>
       </div>

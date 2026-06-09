@@ -20,133 +20,259 @@
             </button>
 
             <form [formGroup]="inscricaoForm" (ngSubmit)="onSubmit()" *ngIf="!loading && !success" novalidate>
+                <mat-stepper linear #stepper>
+                    
+                    <!-- Passo 1: Dados do Esposo -->
+                    <mat-step [stepControl]="pessoasFormArray.at(0)" label="Esposo">
+                        <div formArrayName="pessoas">
+                            <div [formGroupName]="0" class="pessoa-form">
+                                <h2>Dados do Esposo</h2>
 
+                                <div class="form-row">
+                                    <mat-form-field appearance="outline" class="form-field full-width">
+                                        <mat-label>Nome Completo</mat-label>
+                                        <input matInput formControlName="nome_completo">
+                                        <mat-error *ngIf="pessoasFormArray.at(0).get('nome_completo')?.hasError('required')">
+                                            Nome completo é obrigatório
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
 
-                <!-- Dados das Pessoas (Esposo e Esposa) -->
-                <div formArrayName="pessoas" class="form-section">
-                    <div *ngFor="let pessoa of pessoasFormArray.controls; let i = index" class="pessoa-form"
-                        [formGroupName]="i">
-                        <h2>{{ pessoa.get('tipo')?.value === 'esposo' ? 'Dados do Esposo' : 'Dados da Esposa' }}</h2>
+                                <div class="form-row">
+                                    <mat-form-field appearance="outline" class="form-field">
+                                        <mat-label>Nome Social</mat-label>
+                                        <input matInput formControlName="nome_social">
+                                    </mat-form-field>
 
-                        <div class="form-row">
-                            <mat-form-field appearance="outline" class="form-field full-width">
-                                <mat-label>Nome Completo</mat-label>
-                                <input matInput formControlName="nome_completo">
-                                <mat-error *ngIf="pessoa.get('nome_completo')!.hasError('required')">
-                                    Nome completo é obrigatório
-                                </mat-error>
-                            </mat-form-field>
+                                    <mat-form-field appearance="outline" class="form-field">
+                                        <mat-label>Data de Nascimento</mat-label>
+                                        <input matInput formControlName="data_nascimento" mask="00/00/0000"
+                                            placeholder="dd/mm/aaaa">
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="form-row">
+                                    <mat-form-field appearance="outline" class="form-field">
+                                        <mat-label>Profissão</mat-label>
+                                        <input matInput formControlName="profissao">
+                                    </mat-form-field>
+
+                                    <mat-form-field appearance="outline" class="form-field">
+                                        <mat-label>Email</mat-label>
+                                        <input matInput formControlName="email" type="email">
+                                        <mat-error *ngIf="pessoasFormArray.at(0).get('email')?.hasError('email')">
+                                            Email inválido
+                                        </mat-error>
+                                    </mat-form-field>
+
+                                    <mat-form-field appearance="outline" class="form-field">
+                                        <mat-label>Celular</mat-label>
+                                        <input matInput formControlName="celular" mask="(00) 00000-0000"
+                                            placeholder="(00) 00000-0000">
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="form-row">
+                                    <mat-form-field appearance="outline" class="form-field">
+                                        <mat-label>RG</mat-label>
+                                        <input matInput formControlName="rg">
+                                    </mat-form-field>
+
+                                    <mat-form-field appearance="outline" class="form-field">
+                                        <mat-label>Órgão Emissor</mat-label>
+                                        <input matInput formControlName="rg_emissor">
+                                    </mat-form-field>
+
+                                    <mat-form-field appearance="outline" class="form-field">
+                                        <mat-label>CPF</mat-label>
+                                        <input matInput formControlName="cpf" mask="000.000.000-00"
+                                            placeholder="000.000.000-00">
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="form-row">
+                                    <mat-form-field appearance="outline" class="form-field">
+                                        <mat-label>Religião</mat-label>
+                                        <mat-select formControlName="religiao">
+                                            <mat-option *ngFor="let religiao of religioes" [value]="religiao">
+                                                {{ religiao }}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="pessoasFormArray.at(0).get('religiao')?.hasError('required')">
+                                            Religião é obrigatória
+                                        </mat-error>
+                                    </mat-form-field>
+
+                                    <mat-form-field appearance="outline" class="form-field">
+                                        <mat-label>Restrição Alimentar</mat-label>
+                                        <mat-select formControlName="dieta_alimentar">
+                                            <mat-option *ngFor="let dieta of dietasAlimentares" [value]="dieta">
+                                                {{ dieta }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="form-row checkbox-row">
+                                    <mat-checkbox formControlName="problema_saude">Possui problema de saúde?</mat-checkbox>
+                                </div>
+
+                                <div class="form-row" *ngIf="pessoasFormArray.at(0).get('problema_saude')?.value">
+                                    <mat-form-field appearance="outline" class="form-field full-width">
+                                        <mat-label>Descreva o problema de saúde</mat-label>
+                                        <textarea matInput formControlName="problema_saude_descricao" rows="2"></textarea>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="form-row checkbox-row">
+                                    <mat-checkbox formControlName="medicamento_especial">Usa medicamento especial?</mat-checkbox>
+                                </div>
+
+                                <div class="form-row" *ngIf="pessoasFormArray.at(0).get('medicamento_especial')?.value">
+                                    <mat-form-field appearance="outline" class="form-field full-width">
+                                        <mat-label>Descreva o medicamento</mat-label>
+                                        <textarea matInput formControlName="medicamento_especial_descricao" rows="2"></textarea>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="form-row checkbox-row">
+                                    <mat-checkbox formControlName="diabetico">É diabético(a)?</mat-checkbox>
+                                </div>
+                            </div>
                         </div>
-
-                        <div class="form-row">
-                            <mat-form-field appearance="outline" class="form-field">
-                                <mat-label>Nome Social</mat-label>
-                                <input matInput formControlName="nome_social">
-                            </mat-form-field>
-
-                            <mat-form-field appearance="outline" class="form-field">
-                                <mat-label>Data de Nascimento</mat-label>
-                                <input matInput formControlName="data_nascimento" mask="00/00/0000"
-                                    placeholder="dd/mm/aaaa">
-                            </mat-form-field>
+                        <div class="form-actions">
+                            <button type="button" mat-raised-button color="primary" matStepperNext>Próximo</button>
                         </div>
+                    </mat-step>
 
-                        <div class="form-row">
-                            <mat-form-field appearance="outline" class="form-field">
-                                <mat-label>Profissão</mat-label>
-                                <input matInput formControlName="profissao">
-                            </mat-form-field>
+                    <!-- Passo 2: Dados da Esposa -->
+                    <mat-step [stepControl]="pessoasFormArray.at(1)" label="Esposa">
+                        <div formArrayName="pessoas">
+                            <div [formGroupName]="1" class="pessoa-form">
+                                <h2>Dados da Esposa</h2>
 
-                            <mat-form-field appearance="outline" class="form-field">
-                                <mat-label>Email</mat-label>
-                                <input matInput formControlName="email" type="email">
-                                <mat-error *ngIf="pessoa.get('email')?.hasError('email')">
-                                    Email inválido
-                                </mat-error>
-                            </mat-form-field>
+                                <div class="form-row">
+                                    <mat-form-field appearance="outline" class="form-field full-width">
+                                        <mat-label>Nome Completo</mat-label>
+                                        <input matInput formControlName="nome_completo">
+                                        <mat-error *ngIf="pessoasFormArray.at(1).get('nome_completo')?.hasError('required')">
+                                            Nome completo é obrigatório
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
 
-                            <mat-form-field appearance="outline" class="form-field">
-                                <mat-label>Celular</mat-label>
-                                <input matInput formControlName="celular" mask="(00) 00000-0000"
-                                    placeholder="(00) 00000-0000">
-                            </mat-form-field>
+                                <div class="form-row">
+                                    <mat-form-field appearance="outline" class="form-field">
+                                        <mat-label>Nome Social</mat-label>
+                                        <input matInput formControlName="nome_social">
+                                    </mat-form-field>
+
+                                    <mat-form-field appearance="outline" class="form-field">
+                                        <mat-label>Data de Nascimento</mat-label>
+                                        <input matInput formControlName="data_nascimento" mask="00/00/0000"
+                                            placeholder="dd/mm/aaaa">
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="form-row">
+                                    <mat-form-field appearance="outline" class="form-field">
+                                        <mat-label>Profissão</mat-label>
+                                        <input matInput formControlName="profissao">
+                                    </mat-form-field>
+
+                                    <mat-form-field appearance="outline" class="form-field">
+                                        <mat-label>Email</mat-label>
+                                        <input matInput formControlName="email" type="email">
+                                        <mat-error *ngIf="pessoasFormArray.at(1).get('email')?.hasError('email')">
+                                            Email inválido
+                                        </mat-error>
+                                    </mat-form-field>
+
+                                    <mat-form-field appearance="outline" class="form-field">
+                                        <mat-label>Celular</mat-label>
+                                        <input matInput formControlName="celular" mask="(00) 00000-0000"
+                                            placeholder="(00) 00000-0000">
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="form-row">
+                                    <mat-form-field appearance="outline" class="form-field">
+                                        <mat-label>RG</mat-label>
+                                        <input matInput formControlName="rg">
+                                    </mat-form-field>
+
+                                    <mat-form-field appearance="outline" class="form-field">
+                                        <mat-label>Órgão Emissor</mat-label>
+                                        <input matInput formControlName="rg_emissor">
+                                    </mat-form-field>
+
+                                    <mat-form-field appearance="outline" class="form-field">
+                                        <mat-label>CPF</mat-label>
+                                        <input matInput formControlName="cpf" mask="000.000.000-00"
+                                            placeholder="000.000.000-00">
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="form-row">
+                                    <mat-form-field appearance="outline" class="form-field">
+                                        <mat-label>Religião</mat-label>
+                                        <mat-select formControlName="religiao">
+                                            <mat-option *ngFor="let religiao of religioes" [value]="religiao">
+                                                {{ religiao }}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="pessoasFormArray.at(1).get('religiao')?.hasError('required')">
+                                            Religião é obrigatória
+                                        </mat-error>
+                                    </mat-form-field>
+
+                                    <mat-form-field appearance="outline" class="form-field">
+                                        <mat-label>Restrição Alimentar</mat-label>
+                                        <mat-select formControlName="dieta_alimentar">
+                                            <mat-option *ngFor="let dieta of dietasAlimentares" [value]="dieta">
+                                                {{ dieta }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="form-row checkbox-row">
+                                    <mat-checkbox formControlName="problema_saude">Possui problema de saúde?</mat-checkbox>
+                                </div>
+
+                                <div class="form-row" *ngIf="pessoasFormArray.at(1).get('problema_saude')?.value">
+                                    <mat-form-field appearance="outline" class="form-field full-width">
+                                        <mat-label>Descreva o problema de saúde</mat-label>
+                                        <textarea matInput formControlName="problema_saude_descricao" rows="2"></textarea>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="form-row checkbox-row">
+                                    <mat-checkbox formControlName="medicamento_especial">Usa medicamento especial?</mat-checkbox>
+                                </div>
+
+                                <div class="form-row" *ngIf="pessoasFormArray.at(1).get('medicamento_especial')?.value">
+                                    <mat-form-field appearance="outline" class="form-field full-width">
+                                        <mat-label>Descreva o medicamento</mat-label>
+                                        <textarea matInput formControlName="medicamento_especial_descricao" rows="2"></textarea>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="form-row checkbox-row">
+                                    <mat-checkbox formControlName="diabetico">É diabético(a)?</mat-checkbox>
+                                </div>
+                            </div>
                         </div>
-
-                        <div class="form-row">
-                            <mat-form-field appearance="outline" class="form-field">
-                                <mat-label>RG</mat-label>
-                                <input matInput formControlName="rg">
-                            </mat-form-field>
-
-                            <mat-form-field appearance="outline" class="form-field">
-                                <mat-label>Órgão Emissor</mat-label>
-                                <input matInput formControlName="rg_emissor">
-                            </mat-form-field>
-
-                            <mat-form-field appearance="outline" class="form-field">
-                                <mat-label>CPF</mat-label>
-                                <input matInput formControlName="cpf" mask="000.000.000-00"
-                                    placeholder="000.000.000-00">
-                            </mat-form-field>
+                        <div class="form-actions">
+                            <button type="button" mat-button matStepperPrevious>Anterior</button>
+                            <button type="button" mat-raised-button color="primary" matStepperNext>Próximo</button>
                         </div>
+                    </mat-step>
 
-                        <div class="form-row">
-                            <mat-form-field appearance="outline" class="form-field">
-                                <mat-label>Religião</mat-label>
-                                <mat-select formControlName="religiao">
-                                    <mat-option *ngFor="let religiao of religioes" [value]="religiao">
-                                        {{ religiao }}
-                                    </mat-option>
-                                </mat-select>
-                                <mat-error *ngIf="pessoa.get('religiao')?.hasError('required')">
-                                    Religião é obrigatória
-                                </mat-error>
-                            </mat-form-field>
-
-                            <mat-form-field appearance="outline" class="form-field">
-                                <mat-label>Restrição Alimentar</mat-label>
-                                <mat-select formControlName="dieta_alimentar">
-                                    <mat-option *ngFor="let dieta of dietasAlimentares" [value]="dieta">
-                                        {{ dieta }}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-
-                        <div class="form-row checkbox-row">
-                            <mat-checkbox formControlName="problema_saude">Possui problema de saúde?</mat-checkbox>
-                        </div>
-
-                        <div class="form-row" *ngIf="pessoa.get('problema_saude')?.value">
-                            <mat-form-field appearance="outline" class="form-field full-width">
-                                <mat-label>Descreva o problema de saúde</mat-label>
-                                <textarea matInput formControlName="problema_saude_descricao" rows="2"></textarea>
-                            </mat-form-field>
-                        </div>
-
-                        <div class="form-row checkbox-row">
-                            <mat-checkbox formControlName="medicamento_especial">Usa medicamento
-                                especial?</mat-checkbox>
-                        </div>
-
-                        <div class="form-row" *ngIf="pessoa.get('medicamento_especial')?.value">
-                            <mat-form-field appearance="outline" class="form-field full-width">
-                                <mat-label>Descreva o medicamento</mat-label>
-                                <textarea matInput formControlName="medicamento_especial_descricao" rows="2"></textarea>
-                            </mat-form-field>
-                        </div>
-
-                        <div class="form-row checkbox-row">
-                            <mat-checkbox formControlName="diabetico">É diabético(a)?</mat-checkbox>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Dados do Casal -->
-                <mat-card>
-                    <mat-card-content>
-                        <div formGroupName="casal" class="form-section">
-                            <h2>Dados do Casal</h2>
+                    <!-- Passo 3: Dados do Casal -->
+                    <mat-step [stepControl]="inscricaoForm.get('casal')" label="Dados do Casal">
+                        <div formGroupName="casal" class="pessoa-form">
+                            <h2>Dados Conjugais</h2>
 
                             <mat-form-field appearance="outline" class="form-field">
                                 <mat-label>Data do Casamento</mat-label>
@@ -166,6 +292,14 @@
 
                             <div class="form-row">
                                 <mat-form-field appearance="outline" class="form-field">
+                                    <mat-label>CEP</mat-label>
+                                    <input matInput formControlName="cep" mask="00000-000" placeholder="00000-000" (blur)="buscarCep()">
+                                    <mat-error *ngIf="inscricaoForm.get('casal.cep')?.hasError('required')">
+                                        CEP é obrigatório
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" class="form-field">
                                     <mat-label>Bairro</mat-label>
                                     <input matInput formControlName="bairro">
                                     <mat-error *ngIf="inscricaoForm.get('casal.bairro')?.hasError('required')">
@@ -178,14 +312,6 @@
                                     <input matInput formControlName="cidade">
                                     <mat-error *ngIf="inscricaoForm.get('casal.cidade')?.hasError('required')">
                                         Cidade é obrigatória
-                                    </mat-error>
-                                </mat-form-field>
-
-                                <mat-form-field appearance="outline" class="form-field">
-                                    <mat-label>CEP</mat-label>
-                                    <input matInput formControlName="cep" mask="00000-000" placeholder="00000-000">
-                                    <mat-error *ngIf="inscricaoForm.get('casal.cep')?.hasError('required')">
-                                        CEP é obrigatório
                                     </mat-error>
                                 </mat-form-field>
                             </div>
@@ -231,55 +357,87 @@
                                 </mat-form-field>
                             </div>
                         </div>
-                    </mat-card-content>
-                </mat-card>
-                <!-- Dados dos Filhos -->
-                <div class="form-section">
-                    <h2>Filhos</h2>
-                    <p *ngIf="filhosFormArray.length === 0">Nenhum filho adicionado.</p>
+                        <div class="form-actions">
+                            <button type="button" mat-button matStepperPrevious>Anterior</button>
+                            <button type="button" mat-raised-button color="primary" matStepperNext>Próximo</button>
+                        </div>
+                    </mat-step>
 
-                    <div formArrayName="filhos">
-                        <div *ngFor="let filho of filhosFormArray.controls; let i = index" [formGroupName]="i"
-                            class="filho-form">
-                            <div class="form-row filho-header">
-                                <h3>Filho {{ i + 1 }}</h3>
-                                <button type="button" mat-icon-button color="warn" (click)="removerFilho(i)">
-                                    <mat-icon>delete</mat-icon>
+                    <!-- Passo 4: Filhos -->
+                    <mat-step label="Filhos">
+                        <div class="pessoa-form">
+                            <h2>Filhos</h2>
+                            <p *ngIf="filhosFormArray.length === 0">Nenhum filho adicionado.</p>
+
+                            <div formArrayName="filhos">
+                                <div *ngFor="let filho of filhosFormArray.controls; let i = index" [formGroupName]="i"
+                                    class="filho-form">
+                                    <div class="form-row filho-header">
+                                        <h3>Filho {{ i + 1 }}</h3>
+                                        <button type="button" mat-icon-button color="warn" (click)="removerFilho(i)">
+                                            <mat-icon>delete</mat-icon>
+                                        </button>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <mat-form-field appearance="outline" class="form-field">
+                                            <mat-label>Nome Completo</mat-label>
+                                            <input matInput formControlName="nome_completo">
+                                            <mat-error *ngIf="filho.get('nome_completo')?.hasError('required')">
+                                                Nome completo é obrigatório
+                                            </mat-error>
+                                        </mat-form-field>
+
+                                        <mat-form-field appearance="outline" class="form-field">
+                                            <mat-label>Data de Nascimento</mat-label>
+                                            <input matInput formControlName="data_nascimento" mask="00/00/0000"
+                                                placeholder="dd/mm/aaaa">
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="add-filho-button">
+                                <button type="button" mat-raised-button color="primary" (click)="adicionarFilho()">
+                                    <mat-icon>add</mat-icon> Adicionar Filho
                                 </button>
                             </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" mat-button matStepperPrevious>Anterior</button>
+                            <button type="button" mat-raised-button color="primary" matStepperNext>Próximo</button>
+                        </div>
+                    </mat-step>
 
-                            <div class="form-row">
-                                <mat-form-field appearance="outline" class="form-field">
-                                    <mat-label>Nome Completo</mat-label>
-                                    <input matInput formControlName="nome_completo">
-                                    <mat-error *ngIf="filho.get('nome_completo')?.hasError('required')">
-                                        Nome completo é obrigatório
-                                    </mat-error>
-                                </mat-form-field>
+                    <!-- Passo 5: Revisão e Salvar -->
+                    <mat-step label="Revisão">
+                        <div class="pessoa-form">
+                            <h2>Revisão do Registro</h2>
+                            <p>Revise os principais dados do casal antes de salvar a atualização no sistema.</p>
 
-                                <mat-form-field appearance="outline" class="form-field">
-                                    <mat-label>Data de Nascimento</mat-label>
-                                    <input matInput formControlName="data_nascimento" mask="00/00/0000"
-                                        placeholder="dd/mm/aaaa">
-                                </mat-form-field>
+                            <div style="margin-bottom: 20px; line-height: 1.6;">
+                                <strong>Esposo:</strong> {{ pessoasFormArray.at(0)?.get('nome_completo')?.value || 'Não preenchido' }}
+                                <br>
+                                <strong>Esposa:</strong> {{ pessoasFormArray.at(1)?.get('nome_completo')?.value || 'Não preenchido' }}
+                                <br>
+                                <strong>Endereço:</strong> {{ inscricaoForm.get('casal.endereco')?.value || 'Não preenchido' }}
+                                <br>
+                                <strong>Filhos:</strong> {{ filhosFormArray.length }} adicionado(s).
+                            </div>
+
+                            <div *ngIf="inscricaoForm.invalid" style="color: #f44336; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                                <mat-icon>warning</mat-icon>
+                                <span>O formulário possui erros de validação em etapas anteriores. Por favor, volte e verifique os campos obrigatórios.</span>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="add-filho-button">
-                        <button type="button" mat-raised-button color="primary" (click)="adicionarFilho()">
-                            <mat-icon>add</mat-icon> Adicionar Filho
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Botões de Ação -->
-                <div class="form-actions">
-                    <button type="submit" mat-raised-button color="primary"
-                        [disabled]="inscricaoForm.invalid || loading">
-                        <mat-icon>send</mat-icon> Enviar Atualização
-                    </button>
-                </div>
+                        <div class="form-actions">
+                            <button type="button" mat-button matStepperPrevious>Anterior</button>
+                            <button type="submit" mat-raised-button color="primary" [disabled]="inscricaoForm.invalid || loading">
+                                <mat-icon>send</mat-icon> Enviar Atualização
+                            </button>
+                        </div>
+                    </mat-step>
+                </mat-stepper>
             </form>
         </mat-card-content>
     </mat-card>

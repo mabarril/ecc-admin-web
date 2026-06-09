@@ -20,6 +20,8 @@ import { Registro, RegistroRecord } from '../../models/registro.model';
 import { CasaisService } from '../../services/casais.service';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 
+import { MatStepperModule } from '@angular/material/stepper';
+
 const RELIGIOES = [
   'Adventista do 7º Dia',
   'Evangélica',
@@ -40,7 +42,7 @@ const DIETAS_ALIMENTARES = [
 @Component({
   selector: 'app-form-cadastro',
   imports: [NgxMaskDirective,
-    MatCardModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatCheckboxModule, MatDatepickerModule, MatNativeDateModule, MatButtonModule, MatIconModule, MatSnackBarModule, MatProgressSpinnerModule, FormsModule, ReactiveFormsModule, CommonModule],
+    MatCardModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatCheckboxModule, MatDatepickerModule, MatNativeDateModule, MatButtonModule, MatIconModule, MatSnackBarModule, MatProgressSpinnerModule, MatStepperModule, FormsModule, ReactiveFormsModule, CommonModule],
   templateUrl: './form-cadastro.html',
   styleUrl: './form-cadastro.scss'
 })
@@ -146,6 +148,33 @@ export class FormCadastro implements OnInit {
 
   retornar() {
     this.router.navigate(['/lista-incricao']);
+  }
+
+  buscarCep(): void {
+    const cepField = this.inscricaoForm.get('casal.cep');
+    const cep = cepField?.value?.replace(/\D/g, '');
+    if (cep && cep.length === 8) {
+      fetch(`https://viacep.com.br/ws/${cep}/json/`)
+        .then(res => res.json())
+        .then(dados => {
+          if (dados && !dados.erro) {
+            this.inscricaoForm.patchValue({
+              casal: {
+                endereco: dados.logradouro || '',
+                bairro: dados.bairro || '',
+                cidade: dados.localidade || ''
+              }
+            });
+            this.snackBar.open('Endereço preenchido automaticamente pelo CEP!', 'Fechar', { duration: 3000 });
+          } else {
+            this.snackBar.open('CEP não encontrado.', 'Fechar', { duration: 3000 });
+          }
+        })
+        .catch(err => {
+          console.error('Erro ao buscar CEP:', err);
+          this.snackBar.open('Erro ao buscar o CEP.', 'Fechar', { duration: 3000 });
+        });
+    }
   }
 
   onSubmit(): void {

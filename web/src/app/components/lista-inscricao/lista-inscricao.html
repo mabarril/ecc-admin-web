@@ -52,38 +52,33 @@
 
         <mat-form-field class="col-3" appearance="outline">
             <mat-label>Pesquisar Casal</mat-label>
-            <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Ex. João ou Maria" #input>
         </mat-form-field>
     </div>
     <div class="row">
         <mat-card class="full-width">
-            <mat-table [dataSource]="listaInscritos" class="mat-elevation-z2">
-                <!-- Nome Column -->
+            <mat-table [dataSource]="listaInscritos" matSort class="mat-elevation-z2">
+                <!-- ID Column -->
                 <ng-container matColumnDef="id">
-                    <mat-header-cell *matHeaderCellDef> Casal </mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> ID </mat-header-cell>
                     <mat-cell *matCellDef="let inscricao"> {{inscricao.casal_id}} </mat-cell>
                 </ng-container>
 
-                <!-- Nome Column -->
+                <!-- Casal Column -->
                 <ng-container matColumnDef="nome">
-                    <mat-header-cell *matHeaderCellDef> Nome </mat-header-cell>
-                    <mat-cell *matCellDef="let inscricao"> {{inscricao.casal.nome}} </mat-cell>
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Casal </mat-header-cell>
+                    <mat-cell *matCellDef="let inscricao"> {{inscricao.casal?.nome}} </mat-cell>
                 </ng-container>
-                <!-- Email Column -->
-                <!-- 
-                <ng-container matColumnDef="email">
-                    <mat-header-cell *matHeaderCellDef> Email </mat-header-cell>
-                    <mat-cell *matCellDef="let inscricao"> {{inscricao.email}} </mat-cell>
-                </ng-container> -->
 
+                <!-- Tipo Column -->
                 <ng-container matColumnDef="tipo_participante">
-                    <mat-header-cell *matHeaderCellDef> Tipo </mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Tipo </mat-header-cell>
                     <mat-cell *matCellDef="let inscricao"> {{inscricao.tipo_participante}} </mat-cell>
                 </ng-container>
 
                 <!-- Status Column -->
                 <ng-container matColumnDef="status">
-                    <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef mat-sort-header> Status </mat-header-cell>
                     <mat-cell *matCellDef="let inscricao"> {{inscricao.status}} </mat-cell>
                 </ng-container>
 
@@ -94,22 +89,22 @@
                         <button mat-icon-button (click)="copiarUrl(inscricao)" matTooltip="Copiar link de inscrição">
                             <mat-icon>link</mat-icon>
                         </button>
-                        <button mat-icon-button (click)="editarCasal(inscricao.casal_id)">
+                        <button mat-icon-button (click)="editarCasal(inscricao.casal_id)" matTooltip="Editar cadastro">
                             <mat-icon>edit</mat-icon>
                         </button>
-                        <button mat-icon-button style="color: red;" (click)="deleteInscricao(inscricao.id)">
+                        <button mat-icon-button style="color: red;" (click)="deleteInscricao(inscricao.id)" matTooltip="Excluir inscrição">
                             <mat-icon>delete</mat-icon>
                         </button>
-                        <button mat-icon-button (click)="fichaPdf?.buscarCasalEExibirPDF(inscricao.casal_id)">
+                        <button mat-icon-button (click)="fichaPdf?.buscarCasalEExibirPDF(inscricao.casal_id)" matTooltip="Visualizar PDF">
                             <mat-icon>picture_as_pdf</mat-icon>
                         </button>
-
                     </mat-cell>
                 </ng-container>
 
                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                 <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
             </mat-table>
+            <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons></mat-paginator>
         </mat-card>
     </div>
 </div>
