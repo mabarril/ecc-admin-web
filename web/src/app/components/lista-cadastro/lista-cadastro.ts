@@ -10,7 +10,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { UrlsUnicasService } from '../../services/urls-unicas.service';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { MatLabel } from '@angular/material/form-field';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
@@ -33,10 +32,9 @@ interface Casal {
 
 // Serviço para exibir snackbars
 @Component({
-  selector: 'app-lista-inscricao',
+  selector: 'app-lista-cadastro',
   imports: [
     MatCardModule,
-    MatLabel,
     MatFormFieldModule,
     MatSelectModule,
     CommonModule,
