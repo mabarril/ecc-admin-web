@@ -108,8 +108,34 @@ mat-card-subtitle {
 
 /* Responsividade para dispositivos móveis */
 @media (max-width: 768px) {
+  .inscricao-container {
+    padding: 0 8px;
+    margin: 10px auto;
+  }
+
+  mat-card {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+  }
+
+  ::ng-deep {
+    .mat-mdc-card-content {
+      padding: 0 !important;
+    }
+    .mat-horizontal-content-container {
+      padding: 0 !important;
+    }
+    .mat-step-header {
+      padding: 0 8px !important;
+    }
+  }
+
   .form-row {
     flex-direction: column;
+    gap: 12px;
+    margin-bottom: 12px;
   }
   
   .form-field {
@@ -122,6 +148,16 @@ mat-card-subtitle {
   
   mat-card-subtitle {
     font-size: 14px;
+  }
+
+  .pessoa-form {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+
+  .filho-form {
+    padding: 12px;
+    margin-bottom: 12px;
   }
 }
 
