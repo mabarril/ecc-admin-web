@@ -125,26 +125,26 @@ mat-card-subtitle {
   }
 }
 
-/* Tema com cores sóbrias */
+/* Tema alinhado com o Dark Mode e paleta premium */
 :host {
-  --primary-color: #3f51b5;
-  --accent-color: #ff4081;
-  --warn-color: #f44336;
-  --background-color: #ffffff;
-  --card-background: #ffffff;
-  --text-color: #333333;
-  --secondary-text: #666666;
-  --border-color: #e0e0e0;
+  --primary-color: #6366f1;
+  --accent-color: #a855f7;
+  --warn-color: #ef4444;
+  --background-color: #090b11;
+  --card-background: rgba(255, 255, 255, 0.03);
+  --text-color: #f3f4f6;
+  --secondary-text: #9ca3af;
+  --border-color: rgba(255, 255, 255, 0.08);
 }
 
 /* Estilos para mensagens de erro */
 .error-snackbar {
-  background-color: #f44336;
+  background-color: #ef4444;
   color: white;
 }
 
 /* Estilos para mensagens de sucesso */
 .success-snackbar {
-  background-color: #4caf50;
+  background-color: #10b981;
   color: white;
 }

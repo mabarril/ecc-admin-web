@@ -35,49 +35,89 @@
       </div>
     </div>
 
-    <!-- Tabela Material Modernizada -->
-    <div class="overflow-x-auto w-full" *ngIf="listaCasais?.data?.length">
-      <mat-table [dataSource]="listaCasais" matSort class="w-full bg-transparent mat-table-custom">
-        <!-- ID Column -->
-        <ng-container matColumnDef="id">
-          <mat-header-cell *matHeaderCellDef mat-sort-header class="text-xs font-semibold text-gray-400 py-3 px-4 uppercase tracking-wider"> ID </mat-header-cell>
-          <mat-cell *matCellDef="let casal" class="text-xs text-gray-400 py-3 px-4 font-mono"> {{casal.id}} </mat-cell>
-        </ng-container>
-
-        <!-- Casal Column -->
-        <ng-container matColumnDef="casal">
-          <mat-header-cell *matHeaderCellDef mat-sort-header class="text-xs font-semibold text-gray-400 py-3 px-4 uppercase tracking-wider"> Casal </mat-header-cell>
-          <mat-cell *matCellDef="let casal" class="text-xs font-medium text-white py-3 px-4">
-            <div class="flex items-center gap-2">
-              <span class="material-icons text-brand-primary text-sm">favorite</span>
-              <span>{{casal.nome_esposo}} e {{casal.nome_esposa}}</span>
+    <!-- Tabela/Cards de Cadastro (Opção B Responsiva) -->
+    <div *ngIf="listaCasais?.data?.length">
+      
+      <!-- Visualização em Cards (Apenas Mobile) -->
+      <div class="block md:hidden space-y-4">
+        <div *ngFor="let casal of listaCasais.filteredData" 
+             class="p-4 bg-white/5 border border-white/10 rounded-2xl space-y-3 hover:border-white/20 transition-all duration-200">
+          
+          <div class="flex justify-between items-start gap-2">
+            <div class="flex items-center gap-2 min-w-0">
+              <span class="material-icons text-brand-primary text-sm flex-shrink-0">favorite</span>
+              <span class="text-sm font-bold text-white truncate">{{casal.nome_esposo}} e {{casal.nome_esposa}}</span>
             </div>
-          </mat-cell>
-        </ng-container>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-white/10 text-gray-300 border border-white/10">
+              ID: {{casal.id}}
+            </span>
+          </div>
 
-        <!-- Actions Column -->
-        <ng-container matColumnDef="actions">
-          <mat-header-cell *matHeaderCellDef class="py-3 px-4"></mat-header-cell>
-          <mat-cell *matCellDef="let casal" class="py-3 px-4 flex justify-end gap-2">
+          <!-- Ações rápidas no card (Touch targets recomendados 40x40px) -->
+          <div class="flex justify-end gap-2 pt-3 border-t border-white/5">
             <button (click)="editarCasal(casal.id)" 
-                    class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white flex items-center justify-center transition-all duration-200"
+                    class="w-10 h-10 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white flex items-center justify-center transition-all duration-200 focus:outline-none"
                     title="Editar cadastro">
-              <span class="material-icons text-sm">edit</span>
+              <span class="material-icons text-lg">edit</span>
             </button>
             <button (click)="fichaPdf?.buscarCasalEExibirPDF(casal.id)" 
-                    class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white flex items-center justify-center transition-all duration-200"
+                    class="w-10 h-10 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white flex items-center justify-center transition-all duration-200 focus:outline-none"
                     title="Visualizar PDF">
-              <span class="material-icons text-sm">picture_as_pdf</span>
+              <span class="material-icons text-lg">picture_as_pdf</span>
             </button>
-          </mat-cell>
-        </ng-container>
+          </div>
+        </div>
 
-        <mat-header-row *matHeaderRowDef="displayedColumns" class="bg-white/5 border-b border-white/10"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;" class="border-b border-white/5 hover:bg-white/[0.02] transition-colors"></mat-row>
-      </mat-table>
+        <div *ngIf="!listaCasais.filteredData.length" class="text-center py-8 text-gray-400">
+          <p class="text-sm">Nenhum casal corresponde à pesquisa.</p>
+        </div>
+      </div>
 
-      <!-- Paginação customizada -->
-      <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons class="bg-transparent text-gray-400 text-xs mt-4"></mat-paginator>
+      <!-- Tabela Tradicional (Apenas Desktop) -->
+      <div class="hidden md:block overflow-x-auto w-full">
+        <mat-table [dataSource]="listaCasais" matSort class="w-full bg-transparent mat-table-custom">
+          <!-- ID Column -->
+          <ng-container matColumnDef="id">
+            <mat-header-cell *matHeaderCellDef mat-sort-header class="text-xs font-semibold text-gray-400 py-3 px-4 uppercase tracking-wider"> ID </mat-header-cell>
+            <mat-cell *matCellDef="let casal" class="text-xs text-gray-400 py-3 px-4 font-mono"> {{casal.id}} </mat-cell>
+          </ng-container>
+
+          <!-- Casal Column -->
+          <ng-container matColumnDef="casal">
+            <mat-header-cell *matHeaderCellDef mat-sort-header class="text-xs font-semibold text-gray-400 py-3 px-4 uppercase tracking-wider"> Casal </mat-header-cell>
+            <mat-cell *matCellDef="let casal" class="text-xs font-medium text-white py-3 px-4">
+              <div class="flex items-center gap-2">
+                <span class="material-icons text-brand-primary text-sm">favorite</span>
+                <span>{{casal.nome_esposo}} e {{casal.nome_esposa}}</span>
+              </div>
+            </mat-cell>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <mat-header-cell *matHeaderCellDef class="py-3 px-4"></mat-header-cell>
+            <mat-cell *matCellDef="let casal" class="py-3 px-4 flex justify-end gap-2">
+              <button (click)="editarCasal(casal.id)" 
+                      class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white flex items-center justify-center transition-all duration-200"
+                      title="Editar cadastro">
+                <span class="material-icons text-sm">edit</span>
+              </button>
+              <button (click)="fichaPdf?.buscarCasalEExibirPDF(casal.id)" 
+                      class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white flex items-center justify-center transition-all duration-200"
+                      title="Visualizar PDF">
+                <span class="material-icons text-sm">picture_as_pdf</span>
+              </button>
+            </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedColumns" class="bg-white/5 border-b border-white/10"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;" class="border-b border-white/5 hover:bg-white/[0.02] transition-colors"></mat-row>
+        </mat-table>
+
+        <!-- Paginação customizada -->
+        <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons class="bg-transparent text-gray-400 text-xs mt-4"></mat-paginator>
+      </div>
+
     </div>
 
     <!-- Mensagem de lista vazia -->

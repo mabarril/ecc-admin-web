@@ -103,79 +103,138 @@
       </div>
     </div>
 
-    <!-- Tabela de Inscrições -->
-    <div class="overflow-x-auto w-full" *ngIf="inscricoes?.length">
-      <mat-table [dataSource]="dataSource" matSort class="w-full bg-transparent mat-table-custom">
-        <!-- ID Column -->
-        <ng-container matColumnDef="id">
-          <mat-header-cell *matHeaderCellDef mat-sort-header class="text-xs font-semibold text-gray-400 py-3 px-4 uppercase tracking-wider"> ID </mat-header-cell>
-          <mat-cell *matCellDef="let inscricao" class="text-xs text-gray-400 py-3 px-4 font-mono"> {{inscricao.casal_id}} </mat-cell>
-        </ng-container>
-
-        <!-- Casal Column -->
-        <ng-container matColumnDef="nome">
-          <mat-header-cell *matHeaderCellDef mat-sort-header class="text-xs font-semibold text-gray-400 py-3 px-4 uppercase tracking-wider"> Casal </mat-header-cell>
-          <mat-cell *matCellDef="let inscricao" class="text-xs font-medium text-white py-3 px-4">
-            <div class="flex items-center gap-2">
-              <span class="material-icons text-brand-primary text-sm">favorite</span>
-              <span>{{inscricao.casal?.nome}}</span>
+    <!-- Tabela/Cards de Inscrições (Opção B Responsiva) -->
+    <div *ngIf="inscricoes?.length">
+      
+      <!-- Visualização em Cards (Apenas Mobile) -->
+      <div class="block md:hidden space-y-4">
+        <div *ngFor="let inscricao of dataSource.filteredData" 
+             class="p-4 bg-white/5 border border-white/10 rounded-2xl space-y-3 hover:border-white/20 transition-all duration-200">
+          <div class="flex justify-between items-start gap-2">
+            <div class="flex items-center gap-2 min-w-0">
+              <span class="material-icons text-brand-primary text-sm flex-shrink-0">favorite</span>
+              <span class="text-sm font-bold text-white truncate">{{inscricao.casal?.nome}}</span>
             </div>
-          </mat-cell>
-        </ng-container>
-
-        <!-- Tipo Column -->
-        <ng-container matColumnDef="tipo_participante">
-          <mat-header-cell *matHeaderCellDef mat-sort-header class="text-xs font-semibold text-gray-400 py-3 px-4 uppercase tracking-wider"> Tipo </mat-header-cell>
-          <mat-cell *matCellDef="let inscricao" class="text-xs text-gray-300 py-3 px-4"> 
-            <span class="px-2 py-1 bg-white/5 rounded-lg border border-white/10 font-medium">
-              {{inscricao.tipo_participante}}
-            </span>
-          </mat-cell>
-        </ng-container>
-
-        <!-- Status Column -->
-        <ng-container matColumnDef="status">
-          <mat-header-cell *matHeaderCellDef mat-sort-header class="text-xs font-semibold text-gray-400 py-3 px-4 uppercase tracking-wider"> Status </mat-header-cell>
-          <mat-cell *matCellDef="let inscricao" class="text-xs py-3 px-4"> 
-            <span [class]="inscricao.status === 'Confirmada' || inscricao.status === 'confirmada' ? 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20'">
+            <span [class]="inscricao.status === 'Confirmada' || inscricao.status === 'confirmada' ? 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 whitespace-nowrap' : 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20 whitespace-nowrap'">
               {{inscricao.status}}
             </span>
-          </mat-cell>
-        </ng-container>
+          </div>
 
-        <!-- Actions Column -->
-        <ng-container matColumnDef="actions">
-          <mat-header-cell *matHeaderCellDef class="py-3 px-4"></mat-header-cell>
-          <mat-cell *matCellDef="let inscricao" class="py-3 px-4 flex justify-end gap-2">
+          <div class="grid grid-cols-2 gap-2 text-xs text-gray-400">
+            <div>
+              <p class="text-[10px] uppercase font-semibold text-gray-500">Tipo</p>
+              <p class="text-gray-200 mt-0.5 font-medium">{{inscricao.tipo_participante}}</p>
+            </div>
+            <div>
+              <p class="text-[10px] uppercase font-semibold text-gray-500">ID Casal</p>
+              <p class="text-gray-200 mt-0.5 font-mono">{{inscricao.casal_id}}</p>
+            </div>
+          </div>
+
+          <!-- Ações rápidas no card (Touch targets recomendados 40x40px) -->
+          <div class="flex justify-end gap-2 pt-3 border-t border-white/5">
             <button (click)="copiarUrl(inscricao)" 
-                    class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white flex items-center justify-center transition-all duration-200"
+                    class="w-10 h-10 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white flex items-center justify-center transition-all duration-200 focus:outline-none"
                     title="Copiar link de inscrição">
-              <span class="material-icons text-sm">link</span>
+              <span class="material-icons text-lg">link</span>
             </button>
             <button (click)="editarCasal(inscricao.casal_id)" 
-                    class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white flex items-center justify-center transition-all duration-200"
+                    class="w-10 h-10 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white flex items-center justify-center transition-all duration-200 focus:outline-none"
                     title="Editar cadastro">
-              <span class="material-icons text-sm">edit</span>
+              <span class="material-icons text-lg">edit</span>
             </button>
             <button (click)="fichaPdf?.buscarCasalEExibirPDF(inscricao.casal_id)" 
-                    class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white flex items-center justify-center transition-all duration-200"
+                    class="w-10 h-10 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white flex items-center justify-center transition-all duration-200 focus:outline-none"
                     title="Visualizar PDF">
-              <span class="material-icons text-sm">picture_as_pdf</span>
+              <span class="material-icons text-lg">picture_as_pdf</span>
             </button>
             <button (click)="deleteInscricao(inscricao.id)" 
-                    class="w-8 h-8 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 flex items-center justify-center transition-all duration-200"
+                    class="w-10 h-10 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 flex items-center justify-center transition-all duration-200 focus:outline-none"
                     title="Excluir inscrição">
-              <span class="material-icons text-sm">delete</span>
+              <span class="material-icons text-lg">delete</span>
             </button>
-          </mat-cell>
-        </ng-container>
+          </div>
+        </div>
+        
+        <div *ngIf="!dataSource.filteredData.length" class="text-center py-8 text-gray-400">
+          <p class="text-sm">Nenhuma inscrição corresponde à pesquisa.</p>
+        </div>
+      </div>
 
-        <mat-header-row *matHeaderRowDef="displayedColumns" class="bg-white/5 border-b border-white/10"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;" class="border-b border-white/5 hover:bg-white/[0.02] transition-colors"></mat-row>
-      </mat-table>
+      <!-- Tabela Tradicional (Apenas Desktop) -->
+      <div class="hidden md:block overflow-x-auto w-full">
+        <mat-table [dataSource]="dataSource" matSort class="w-full bg-transparent mat-table-custom">
+          <!-- ID Column -->
+          <ng-container matColumnDef="id">
+            <mat-header-cell *matHeaderCellDef mat-sort-header class="text-xs font-semibold text-gray-400 py-3 px-4 uppercase tracking-wider"> ID </mat-header-cell>
+            <mat-cell *matCellDef="let inscricao" class="text-xs text-gray-400 py-3 px-4 font-mono"> {{inscricao.casal_id}} </mat-cell>
+          </ng-container>
 
-      <!-- Paginação customizada -->
-      <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons class="bg-transparent text-gray-400 text-xs mt-4"></mat-paginator>
+          <!-- Casal Column -->
+          <ng-container matColumnDef="nome">
+            <mat-header-cell *matHeaderCellDef mat-sort-header class="text-xs font-semibold text-gray-400 py-3 px-4 uppercase tracking-wider"> Casal </mat-header-cell>
+            <mat-cell *matCellDef="let inscricao" class="text-xs font-medium text-white py-3 px-4">
+              <div class="flex items-center gap-2">
+                <span class="material-icons text-brand-primary text-sm">favorite</span>
+                <span>{{inscricao.casal?.nome}}</span>
+              </div>
+            </mat-cell>
+          </ng-container>
+
+          <!-- Tipo Column -->
+          <ng-container matColumnDef="tipo_participante">
+            <mat-header-cell *matHeaderCellDef mat-sort-header class="text-xs font-semibold text-gray-400 py-3 px-4 uppercase tracking-wider"> Tipo </mat-header-cell>
+            <mat-cell *matCellDef="let inscricao" class="text-xs text-gray-300 py-3 px-4"> 
+              <span class="px-2 py-1 bg-white/5 rounded-lg border border-white/10 font-medium">
+                {{inscricao.tipo_participante}}
+              </span>
+            </mat-cell>
+          </ng-container>
+
+          <!-- Status Column -->
+          <ng-container matColumnDef="status">
+            <mat-header-cell *matHeaderCellDef mat-sort-header class="text-xs font-semibold text-gray-400 py-3 px-4 uppercase tracking-wider"> Status </mat-header-cell>
+            <mat-cell *matCellDef="let inscricao" class="text-xs py-3 px-4"> 
+              <span [class]="inscricao.status === 'Confirmada' || inscricao.status === 'confirmada' ? 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20'">
+                {{inscricao.status}}
+              </span>
+            </mat-cell>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <mat-header-cell *matHeaderCellDef class="py-3 px-4"></mat-header-cell>
+            <mat-cell *matCellDef="let inscricao" class="py-3 px-4 flex justify-end gap-2">
+              <button (click)="copiarUrl(inscricao)" 
+                      class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white flex items-center justify-center transition-all duration-200"
+                      title="Copiar link de inscrição">
+                <span class="material-icons text-sm">link</span>
+              </button>
+              <button (click)="editarCasal(inscricao.casal_id)" 
+                      class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white flex items-center justify-center transition-all duration-200"
+                      title="Editar cadastro">
+                <span class="material-icons text-sm">edit</span>
+              </button>
+              <button (click)="fichaPdf?.buscarCasalEExibirPDF(inscricao.casal_id)" 
+                      class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white flex items-center justify-center transition-all duration-200"
+                      title="Visualizar PDF">
+                <span class="material-icons text-sm">picture_as_pdf</span>
+              </button>
+              <button (click)="deleteInscricao(inscricao.id)" 
+                      class="w-8 h-8 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 flex items-center justify-center transition-all duration-200"
+                      title="Excluir inscrição">
+                <span class="material-icons text-sm">delete</span>
+              </button>
+            </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedColumns" class="bg-white/5 border-b border-white/10"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;" class="border-b border-white/5 hover:bg-white/[0.02] transition-colors"></mat-row>
+        </mat-table>
+
+        <!-- Paginação customizada -->
+        <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons class="bg-transparent text-gray-400 text-xs mt-4"></mat-paginator>
+      </div>
     </div>
 
     <!-- Mensagem de lista vazia -->
