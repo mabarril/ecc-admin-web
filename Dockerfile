@@ -1,27 +1,23 @@
-# Stage 1: Build Angular APP
-FROM node:20-alpine AS build
+# Stage 1: Build React 19 + Vite Application
+FROM node:22-alpine AS build
 WORKDIR /app
 
-# Only copy web folder to build frontend
 COPY web/package*.json ./
 RUN npm install
 
 COPY web/ ./
-RUN npm run build -- --configuration production
+RUN npm run build
 
-# Stage 2: Serve via Nginx
-FROM nginx:alpine
+# Stage 2: Serve via Nginx Alpine with Healthcheck
+FROM nginx:1.27-alpine
 
-# Copia a configuração customizada do Nginx
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Copia o build da aplicação Angular. No Angular 17+ app builder, 
-# a saída padrão fica em dist/<project-name>/browser.
-# Se a pasta browser não existir, ele vai falhar e o ideal seria copiar public ou outro, 
-# mas esse path cobre o novo padrão.
-COPY --from=build /app/dist/frontend/browser /usr/share/nginx/html
+COPY --from=build /app/dist /usr/share/nginx/html
 
 EXPOSE 80
 EXPOSE 443
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://127.0.0.1:80/healthz || exit 1
 
 CMD ["nginx", "-g", "daemon off;"]
