@@ -230,13 +230,13 @@ export function FormCadastroPage(): React.ReactElement {
     try {
       const address = await fetchAddressByCep(digits);
       if (address) {
-        setValue('casal.endereco', address.logradouro || '', {
+        setValue('casal.endereco', address.endereco || '', {
           shouldValidate: true,
         });
         setValue('casal.bairro', address.bairro || '', {
           shouldValidate: true,
         });
-        setValue('casal.cidade', address.localidade || '', {
+        setValue('casal.cidade', address.cidade || '', {
           shouldValidate: true,
         });
         notify('Endereço preenchido automaticamente pelo CEP!', 'success');
@@ -883,6 +883,7 @@ export function FormCadastroPage(): React.ReactElement {
 
           {activeStep < STEPS.length - 1 ? (
             <button
+              key="btn-next"
               type="button"
               onClick={handleNextStep}
               className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold text-white shadow-lg shadow-indigo-500/20"
@@ -891,6 +892,7 @@ export function FormCadastroPage(): React.ReactElement {
             </button>
           ) : (
             <button
+              key="btn-submit"
               type="submit"
               disabled={isSubmitting}
               className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 hover:opacity-95 disabled:opacity-50 text-xs font-semibold text-white shadow-lg shadow-indigo-500/20 flex items-center gap-2"

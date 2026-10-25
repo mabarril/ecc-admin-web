@@ -23,7 +23,15 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["vitest/globals", "@testing-library/jest-dom"]
+    "types": ["vite/client", "vitest/globals", "@testing-library/jest-dom"]
   },
-  "include": ["src"]
+  "include": [
+    "src/main.tsx",
+    "src/app/App.tsx",
+    "src/domain",
+    "src/features",
+    "src/infrastructure",
+    "src/shared",
+    "src/test"
+  ]
 }

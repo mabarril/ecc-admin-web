@@ -174,6 +174,8 @@ export async function buildApp(
       });
     }
 
+    const errMessage = error instanceof Error ? error.message : '';
+
     if ((error as { statusCode?: number }).statusCode === 429) {
       return reply.status(429).send({
         success: false,
@@ -186,7 +188,7 @@ export async function buildApp(
       return reply.status(400).send({
         success: false,
         code: 'VALIDATION_ERROR',
-        message: error.message || 'Dados de entrada inválidos.',
+        message: errMessage || 'Dados de entrada inválidos.',
       });
     }
 
@@ -196,7 +198,7 @@ export async function buildApp(
       code: 'INTERNAL_SERVER_ERROR',
       message: isProd
         ? 'Erro interno no servidor.'
-        : error.message || 'Erro interno no servidor.',
+        : errMessage || 'Erro interno no servidor.',
     });
   });
 

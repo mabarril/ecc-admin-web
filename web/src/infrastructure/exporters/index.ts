@@ -269,6 +269,6 @@ export const relatoriosExporter = {
     evento?: Evento
   ): Promise<void> {
     await exportListaOnibusPdf(inscricoes, evento);
-    await exportListaOnibusExcel(inscricoes, evento?.nome);
+    await exportListaOnibusExcel(inscricoes);
   },
 };

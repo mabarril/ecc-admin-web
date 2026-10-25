@@ -68,12 +68,12 @@ test.describe('ECC Admin Web - Fluxos E2E Críticos', () => {
     });
 
     await page.goto('/dashboard');
-    await expect(page.getByText('Visão Geral')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Visão Geral' })).toBeVisible();
     await expect(page.getByText('Admin E2E').first()).toBeVisible();
 
     // Redirecionamento legado /lista-incricao -> /lista-inscricao
     await page.goto('/lista-incricao');
     await expect(page).toHaveURL(/\/lista-inscricao/);
-    await expect(page.getByText('Inscrições do Evento')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Inscrições do Evento' })).toBeVisible();
   });
 });

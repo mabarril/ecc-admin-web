@@ -183,7 +183,7 @@ export function ListaInscricoesPage(): React.ReactElement {
     }
   };
 
-  const runReport = async (fn: () => Promise<void>) => {
+  const runReport = async (fn: () => Promise<unknown>) => {
     setMenuOpen(false);
     try {
       await fn();
